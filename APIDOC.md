@@ -1369,6 +1369,32 @@ GetGlobal 返回全局颜色实例。首次调用时会自动初始化全局实�
 
 ---
 
+#### G
+
+```go
+func G() *GlobalColor
+```
+
+G 是 GetGlobal 的快捷方式，返回全局颜色实例。使用更短的函数名，方便频繁调用。
+
+**返回值:**
+- `*GlobalColor`: 全局颜色实例
+
+**示例:**
+
+```go
+// 使用 G() 快捷方式
+c := color.G()
+c.Red("红色文字")
+c.Info("信息日志")
+
+// 等价于
+c := color.GetGlobal()
+c.Red("红色文字")
+```
+
+---
+
 #### ResetGlobal
 
 ```go

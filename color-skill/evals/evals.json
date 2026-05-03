@@ -1,0 +1,53 @@
+{
+  "skill_name": "go-color-assistant",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "我想用 color 库打印红色的错误信息，应该怎么写？",
+      "expected_output": "提供使用 color.Red() 的代码示例",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "给这段代码加上颜色，让成功信息显示绿色，失败信息显示红色：fmt.Println(\"操作结果: \", result)",
+      "expected_output": "提供条件判断 + color.Green()/color.Red() 的代码",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "怎么把字符串变成带颜色的，但不直接打印？我要把它拼接到其他字符串里",
+      "expected_output": "提供 color.SRed() 或 color.SGreen() 的用法",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "我想做一个带颜色的进度条，显示下载进度",
+      "expected_output": "提供使用 color 库构建进度条的代码",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "颜色为什么不显示？我用的 Windows 系统",
+      "expected_output": "解释 Windows 颜色支持问题和解决方案",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "用 RGB 颜色打印一个橙色的标题",
+      "expected_output": "提供 color.RGB(255, 165, 0) 的用法",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "怎么禁用所有颜色输出？我需要支持 NO_COLOR 环境变量",
+      "expected_output": "说明 color.NoColor 和 NO_COLOR 环境变量的用法",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "我想用全局实例来统一管理颜色输出",
+      "expected_output": "提供 color.G() 全局实例的使用示例",
+      "files": []
+    }
+  ]
+}

@@ -87,6 +87,18 @@ func GetGlobal() *GlobalColor {
 	return globalInst
 }
 
+// G 是 GetGlobal 的快捷方式，返回全局颜色实例
+// 使用更短的函数名，方便频繁调用
+//
+// 示例:
+//
+//	c := color.G()
+//	c.Red("红色文字")
+//	c.Info("信息日志")
+func G() *GlobalColor {
+	return GetGlobal()
+}
+
 // ResetGlobal 重置全局实例到默认状态
 func ResetGlobal() {
 	globalOnce = sync.Once{}
