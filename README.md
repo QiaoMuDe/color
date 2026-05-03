@@ -475,6 +475,32 @@ copies or substantial portions of the Software.
 - 👤 [Fatih Arslan](https://github.com/fatih) - 原项目作者
 - 🏠 [github.com/fatih/color](https://github.com/fatih/color) - 原项目地址
 
+### 从原项目迁移
+
+如果你之前使用过 `github.com/fatih/color`，需要注意以下 API 变更：
+
+#### 字符串返回方法命名变更
+
+为了与 Go 标准库（如 `fmt.Sprint`）保持一致，返回字符串的方法名从 `XxxString` 格式改为 `SXxx` 格式：
+
+| 原项目 (fatih/color) | 本项目 | 说明 |
+|---------------------|--------|------|
+| `color.RedString()` | `color.SRed()` | 返回红色字符串 |
+| `color.GreenString()` | `color.SGreen()` | 返回绿色字符串 |
+| `color.BlueString()` | `color.SBlue()` | 返回蓝色字符串 |
+| `color.HiRedString()` | `color.SHiRed()` | 返回高亮红色字符串 |
+| ... | ... | 其他颜色类似 |
+
+**迁移示例：**
+
+```go
+// 原项目代码
+redStr := color.RedString("error: %s", errMsg)
+
+// 迁移后的代码
+redStr := color.SRed("error: %s", errMsg)
+```
+
 ### 贡献指南
 
 欢迎提交 Issue 和 Pull Request！

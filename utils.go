@@ -94,3 +94,21 @@ func colorString(format string, p Attribute, a ...interface{}) string {
 func sprintln(a ...interface{}) string {
 	return strings.TrimSuffix(fmt.Sprintln(a...), "\n")
 }
+
+// clamp255 将整数值限制在 0-255 范围内 (用于 RGB 颜色分量)。
+// 如果值小于 0, 返回 0: 如果值大于 255, 返回 255: 否则返回原值。
+//
+// 参数:
+//   - v: 要限制的 RGB 分量值
+//
+// 返回值:
+//   - int: 限制后的值 (0-255)
+func clamp255(v int) int {
+	if v < 0 {
+		return 0
+	}
+	if v > 255 {
+		return 255
+	}
+	return v
+}

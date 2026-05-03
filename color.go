@@ -34,6 +34,7 @@ func New(value ...Attribute) *Color {
 }
 
 // RGB 返回一个新的 24 位 RGB 前景色。
+// 参数值会被自动截断到 0-255 范围内。
 //
 // 参数:
 //   - r: 红色分量 (0-255)
@@ -43,10 +44,14 @@ func New(value ...Attribute) *Color {
 // 返回值:
 //   - *Color: 配置好的颜色对象
 func RGB(r, g, b int) *Color {
+	r = clamp255(r)
+	g = clamp255(g)
+	b = clamp255(b)
 	return New(foreground, 2, Attribute(r), Attribute(g), Attribute(b))
 }
 
 // BgRGB 返回一个新的 24 位 RGB 背景色。
+// 参数值会被自动截断到 0-255 范围内。
 //
 // 参数:
 //   - r: 红色分量 (0-255)
@@ -56,6 +61,9 @@ func RGB(r, g, b int) *Color {
 // 返回值:
 //   - *Color: 配置好的颜色对象
 func BgRGB(r, g, b int) *Color {
+	r = clamp255(r)
+	g = clamp255(g)
+	b = clamp255(b)
 	return New(background, 2, Attribute(r), Attribute(g), Attribute(b))
 }
 
@@ -68,7 +76,7 @@ func BgRGB(r, g, b int) *Color {
 //   - b: 蓝色分量 (0-255)
 //
 // 返回值:
-//   - *Color: 当前颜色对象，支持链式调用
+//   - *Color: 当前颜色对象, 支持链式调用
 //
 // 示例:
 //
@@ -87,7 +95,7 @@ func (c *Color) AddRGB(r, g, b int) *Color {
 //   - b: 蓝色分量 (0-255)
 //
 // 返回值:
-//   - *Color: 当前颜色对象，支持链式调用
+//   - *Color: 当前颜色对象, 支持链式调用
 //
 // 示例:
 //
@@ -98,10 +106,10 @@ func (c *Color) AddBgRGB(r, g, b int) *Color {
 }
 
 // Set 设置 SGR 序列。
-// 如果颜色被禁用，则不执行任何操作。
+// 如果颜色被禁用, 则不执行任何操作。
 //
 // 返回值:
-//   - *Color: 当前颜色对象，支持链式调用
+//   - *Color: 当前颜色对象, 支持链式调用
 func (c *Color) Set() *Color {
 	if c.isNoColorSet() {
 		return c
@@ -112,7 +120,7 @@ func (c *Color) Set() *Color {
 }
 
 // unset 重置 SGR 序列。
-// 如果颜色被禁用，则不执行任何操作。
+// 如果颜色被禁用, 则不执行任何操作。
 func (c *Color) unset() {
 	if c.isNoColorSet() {
 		return
@@ -122,13 +130,13 @@ func (c *Color) unset() {
 }
 
 // SetWriter 用于使用给定的 io.Writer 设置 SGR 序列。
-// 这是一个底层函数，用户应该使用更高级的函数，如 color.Fprint、color.Print 等。
+// 这是一个底层函数, 用户应该使用更高级的函数, 如 color.Fprint、color.Print 等。
 //
 // 参数:
 //   - w: 目标写入器
 //
 // 返回值:
-//   - *Color: 当前颜色对象，支持链式调用
+//   - *Color: 当前颜色对象, 支持链式调用
 func (c *Color) SetWriter(w io.Writer) *Color {
 	_, _ = c.setWriter(w)
 	return c
@@ -141,7 +149,7 @@ func (c *Color) SetWriter(w io.Writer) *Color {
 //
 // 返回值:
 //   - int: 写入的字节数
-//   - error: 写入过程中的错误（如果有）
+//   - error: 写入过程中的错误 (如果有)
 func (c *Color) setWriter(w io.Writer) (int, error) {
 	if c.isNoColorSet() {
 		return 0, nil
@@ -166,7 +174,7 @@ func (c *Color) UnsetWriter(w io.Writer) {
 //
 // 返回值:
 //   - int: 写入的字节数
-//   - error: 写入过程中的错误（如果有）
+//   - error: 写入过程中的错误 (如果有)
 func (c *Color) unsetWriter(w io.Writer) (int, error) {
 	if c.isNoColorSet() {
 		return 0, nil
@@ -182,7 +190,7 @@ func (c *Color) unsetWriter(w io.Writer) (int, error) {
 //   - value: 任意数量的 SGR 参数
 //
 // 返回值:
-//   - *Color: 当前颜色对象，支持链式调用
+//   - *Color: 当前颜色对象, 支持链式调用
 //
 // 示例:
 //
@@ -193,7 +201,7 @@ func (c *Color) Add(value ...Attribute) *Color {
 }
 
 // Fprint 使用其操作数的默认格式进行格式化并写入 w。
-// 当操作数都不是字符串时，在它们之间添加空格。
+// 当操作数都不是字符串时, 在它们之间添加空格。
 //
 // 参数:
 //   - w: 目标写入器
@@ -201,11 +209,11 @@ func (c *Color) Add(value ...Attribute) *Color {
 //
 // 返回值:
 //   - int: 写入的字节数
-//   - error: 写入过程中的错误（如果有）
+//   - error: 写入过程中的错误 (如果有)
 //
 // 注意:
 //
-//	在 Windows 上，如果 w 是 *os.File 类型，用户应该用 colorable.NewColorable() 包装 w。
+//	在 Windows 上, 如果 w 是 *os.File 类型, 用户应该用 colorable.NewColorable() 包装 w。
 func (c *Color) Fprint(w io.Writer, a ...interface{}) (n int, err error) {
 	n, err = c.setWriter(w)
 	if err != nil {
@@ -224,7 +232,7 @@ func (c *Color) Fprint(w io.Writer, a ...interface{}) (n int, err error) {
 }
 
 // Print 使用其操作数的默认格式进行格式化并写入标准输出。
-// 当操作数都不是字符串时，在它们之间添加空格。
+// 当操作数都不是字符串时, 在它们之间添加空格。
 // 这是用给定颜色包装的标准 fmt.Print() 方法。
 //
 // 参数:
@@ -232,7 +240,7 @@ func (c *Color) Fprint(w io.Writer, a ...interface{}) (n int, err error) {
 //
 // 返回值:
 //   - int: 写入的字节数
-//   - error: 写入过程中的错误（如果有）
+//   - error: 写入过程中的错误 (如果有)
 func (c *Color) Print(a ...interface{}) (n int, err error) {
 	c.Set()
 	defer c.unset()
@@ -249,11 +257,11 @@ func (c *Color) Print(a ...interface{}) (n int, err error) {
 //
 // 返回值:
 //   - int: 写入的字节数
-//   - error: 写入过程中的错误（如果有）
+//   - error: 写入过程中的错误 (如果有)
 //
 // 注意:
 //
-//	在 Windows 上，如果 w 是 *os.File 类型，用户应该用 colorable.NewColorable() 包装 w。
+//	在 Windows 上, 如果 w 是 *os.File 类型, 用户应该用 colorable.NewColorable() 包装 w。
 func (c *Color) Fprintf(w io.Writer, format string, a ...interface{}) (n int, err error) {
 	n, err = c.setWriter(w)
 	if err != nil {
@@ -280,7 +288,7 @@ func (c *Color) Fprintf(w io.Writer, format string, a ...interface{}) (n int, er
 //
 // 返回值:
 //   - int: 写入的字节数
-//   - error: 写入过程中的错误（如果有）
+//   - error: 写入过程中的错误 (如果有)
 func (c *Color) Printf(format string, a ...interface{}) (n int, err error) {
 	c.Set()
 	defer c.unset()
@@ -289,7 +297,7 @@ func (c *Color) Printf(format string, a ...interface{}) (n int, err error) {
 }
 
 // Fprintln 使用其操作数的默认格式进行格式化并写入 w。
-// 操作数之间始终添加空格，并追加换行符。
+// 操作数之间始终添加空格, 并追加换行符。
 //
 // 参数:
 //   - w: 目标写入器
@@ -297,17 +305,17 @@ func (c *Color) Printf(format string, a ...interface{}) (n int, err error) {
 //
 // 返回值:
 //   - int: 写入的字节数
-//   - error: 写入过程中的错误（如果有）
+//   - error: 写入过程中的错误 (如果有)
 //
 // 注意:
 //
-//	在 Windows 上，如果 w 是 *os.File 类型，用户应该用 colorable.NewColorable() 包装 w。
+//	在 Windows 上, 如果 w 是 *os.File 类型, 用户应该用 colorable.NewColorable() 包装 w。
 func (c *Color) Fprintln(w io.Writer, a ...interface{}) (n int, err error) {
 	return fmt.Fprintln(w, c.wrap(sprintln(a...)))
 }
 
 // Println 使用其操作数的默认格式进行格式化并写入标准输出。
-// 操作数之间始终添加空格，并追加换行符。
+// 操作数之间始终添加空格, 并追加换行符。
 // 这是用给定颜色包装的标准 fmt.Println() 方法。
 //
 // 参数:
@@ -315,12 +323,12 @@ func (c *Color) Fprintln(w io.Writer, a ...interface{}) (n int, err error) {
 //
 // 返回值:
 //   - int: 写入的字节数
-//   - error: 写入过程中的错误（如果有）
+//   - error: 写入过程中的错误 (如果有)
 func (c *Color) Println(a ...interface{}) (n int, err error) {
 	return fmt.Fprintln(Output, c.wrap(sprintln(a...)))
 }
 
-// Sprint 类似于 Print，但返回字符串而不是打印它。
+// Sprint 类似于 Print, 但返回字符串而不是打印它。
 //
 // 参数:
 //   - a: 要格式化的操作数
@@ -331,18 +339,18 @@ func (c *Color) Sprint(a ...interface{}) string {
 	return c.wrap(fmt.Sprint(a...))
 }
 
-// Sprintln 类似于 Println，但返回字符串而不是打印它。
+// Sprintln 类似于 Println, 但返回字符串而不是打印它。
 //
 // 参数:
 //   - a: 要格式化的操作数
 //
 // 返回值:
-//   - string: 格式化后的彩色字符串（包含换行符）
+//   - string: 格式化后的彩色字符串 (包含换行符)
 func (c *Color) Sprintln(a ...interface{}) string {
 	return c.wrap(sprintln(a...)) + "\n"
 }
 
-// Sprintf 类似于 Printf，但返回字符串而不是打印它。
+// Sprintf 类似于 Printf, 但返回字符串而不是打印它。
 //
 // 参数:
 //   - format: 格式字符串
@@ -354,7 +362,7 @@ func (c *Color) Sprintf(format string, a ...interface{}) string {
 	return c.wrap(fmt.Sprintf(format, a...))
 }
 
-// FprintFunc 返回一个新函数，该函数使用 color.Fprint() 将传入的参数打印为彩色。
+// FprintFunc 返回一个新函数, 该函数使用 color.Fprint() 将传入的参数打印为彩色。
 //
 // 返回值:
 //   - func(w io.Writer, a ...interface{}): 打印函数
@@ -364,7 +372,7 @@ func (c *Color) FprintFunc() func(w io.Writer, a ...interface{}) {
 	}
 }
 
-// PrintFunc 返回一个新函数，该函数使用 color.Print() 将传入的参数打印为彩色。
+// PrintFunc 返回一个新函数, 该函数使用 color.Print() 将传入的参数打印为彩色。
 //
 // 返回值:
 //   - func(a ...interface{}): 打印函数
@@ -374,7 +382,7 @@ func (c *Color) PrintFunc() func(a ...interface{}) {
 	}
 }
 
-// FprintfFunc 返回一个新函数，该函数使用 color.Fprintf() 将传入的参数打印为彩色。
+// FprintfFunc 返回一个新函数, 该函数使用 color.Fprintf() 将传入的参数打印为彩色。
 //
 // 返回值:
 //   - func(w io.Writer, format string, a ...interface{}): 格式化打印函数
@@ -384,7 +392,7 @@ func (c *Color) FprintfFunc() func(w io.Writer, format string, a ...interface{})
 	}
 }
 
-// PrintfFunc 返回一个新函数，该函数使用 color.Printf() 将传入的参数打印为彩色。
+// PrintfFunc 返回一个新函数, 该函数使用 color.Printf() 将传入的参数打印为彩色。
 //
 // 返回值:
 //   - func(format string, a ...interface{}): 格式化打印函数
@@ -394,27 +402,27 @@ func (c *Color) PrintfFunc() func(format string, a ...interface{}) {
 	}
 }
 
-// FprintlnFunc 返回一个新函数，该函数使用 color.Fprintln() 将传入的参数打印为彩色。
+// FprintlnFunc 返回一个新函数, 该函数使用 color.Fprintln() 将传入的参数打印为彩色。
 //
 // 返回值:
-//   - func(w io.Writer, a ...interface{}): 打印函数（带换行）
+//   - func(w io.Writer, a ...interface{}): 打印函数 (带换行)
 func (c *Color) FprintlnFunc() func(w io.Writer, a ...interface{}) {
 	return func(w io.Writer, a ...interface{}) {
 		_, _ = c.Fprintln(w, a...)
 	}
 }
 
-// PrintlnFunc 返回一个新函数，该函数使用 color.Println() 将传入的参数打印为彩色。
+// PrintlnFunc 返回一个新函数, 该函数使用 color.Println() 将传入的参数打印为彩色。
 //
 // 返回值:
-//   - func(a ...interface{}): 打印函数（带换行）
+//   - func(a ...interface{}): 打印函数 (带换行)
 func (c *Color) PrintlnFunc() func(a ...interface{}) {
 	return func(a ...interface{}) {
 		_, _ = c.Println(a...)
 	}
 }
 
-// SprintFunc 返回一个新函数，该函数使用 fmt.Sprint() 为给定参数返回彩色字符串。
+// SprintFunc 返回一个新函数, 该函数使用 fmt.Sprint() 为给定参数返回彩色字符串。
 // 可用于放入或混合到其他字符串中。
 //
 // 返回值:
@@ -434,7 +442,7 @@ func (c *Color) SprintFunc() func(a ...interface{}) string {
 	}
 }
 
-// SprintfFunc 返回一个新函数，该函数使用 fmt.Sprintf() 为给定参数返回彩色字符串。
+// SprintfFunc 返回一个新函数, 该函数使用 fmt.Sprintf() 为给定参数返回彩色字符串。
 // 可用于放入或混合到其他字符串中。
 //
 // 返回值:
@@ -449,11 +457,11 @@ func (c *Color) SprintfFunc() func(format string, a ...interface{}) string {
 	}
 }
 
-// SprintlnFunc 返回一个新函数，该函数使用 fmt.Sprintln() 为给定参数返回彩色字符串。
+// SprintlnFunc 返回一个新函数, 该函数使用 fmt.Sprintln() 为给定参数返回彩色字符串。
 // 可用于放入或混合到其他字符串中。
 //
 // 返回值:
-//   - func(a ...interface{}) string: 字符串生成函数（带换行）
+//   - func(a ...interface{}) string: 字符串生成函数 (带换行)
 //
 // 注意:
 //
@@ -464,10 +472,10 @@ func (c *Color) SprintlnFunc() func(a ...interface{}) string {
 	}
 }
 
-// sequence 返回格式化的 SGR 序列，用于插入 "\x1b[...m"。
+// sequence 返回格式化的 SGR 序列, 用于插入 "\x1b[...m"。
 //
 // 返回值:
-//   - string: SGR 序列字符串，例如 "1;36" 表示粗体青色
+//   - string: SGR 序列字符串, 例如 "1;36" 表示粗体青色
 func (c *Color) sequence() string {
 	format := make([]string, len(c.params))
 	for i, v := range c.params {
@@ -483,7 +491,7 @@ func (c *Color) sequence() string {
 //   - s: 要包装的原始字符串
 //
 // 返回值:
-//   - string: 包装后的彩色字符串，可以直接打印
+//   - string: 包装后的彩色字符串, 可以直接打印
 func (c *Color) wrap(s string) string {
 	if c.isNoColorSet() {
 		return s
@@ -495,13 +503,13 @@ func (c *Color) wrap(s string) string {
 // format 返回 SGR 转义序列的开头部分。
 //
 // 返回值:
-//   - string: 转义序列，例如 "\x1b[31m"
+//   - string: 转义序列, 例如 "\x1b[31m"
 func (c *Color) format() string {
 	return fmt.Sprintf("%s[%sm", escape, c.sequence())
 }
 
-// unformat 返回 SGR 转义序列的结尾部分（重置序列）。
-// 对于序列中的每个元素，使用特定的重置转义，如果未找到则使用通用重置。
+// unformat 返回 SGR 转义序列的结尾部分 (重置序列) 。
+// 对于序列中的每个元素, 使用特定的重置转义, 如果未找到则使用通用重置。
 //
 // 返回值:
 //   - string: 重置转义序列
@@ -519,20 +527,20 @@ func (c *Color) unformat() string {
 }
 
 // DisableColor 禁用颜色输出。
-// 可用于在不更改任何现有代码的情况下禁用颜色输出，例如配合 "--no-color" 标志使用。
-// 要重新启用，请使用 EnableColor() 方法。
+// 可用于在不更改任何现有代码的情况下禁用颜色输出, 例如配合 "--no-color" 标志使用。
+// 要重新启用, 请使用 EnableColor() 方法。
 func (c *Color) DisableColor() {
 	c.noColor = boolPtr(true)
 }
 
 // EnableColor 启用颜色输出。
-// 与 DisableColor() 一起使用。如果颜色未被禁用，此方法没有副作用。
+// 与 DisableColor() 一起使用。如果颜色未被禁用, 此方法没有副作用。
 func (c *Color) EnableColor() {
 	c.noColor = boolPtr(false)
 }
 
 // isNoColorSet 检查颜色是否被禁用。
-// 首先检查用户设置的颜色选项，如果没有则返回全局选项。
+// 首先检查用户设置的颜色选项, 如果没有则返回全局选项。
 //
 // 返回值:
 //   - bool: 如果颜色被禁用则返回 true
@@ -542,7 +550,7 @@ func (c *Color) isNoColorSet() bool {
 		return *c.noColor
 	}
 
-	// 如果没有，则返回全局选项，默认情况下是禁用的
+	// 如果没有, 则返回全局选项, 默认情况下是禁用的
 	return NoColor
 }
 

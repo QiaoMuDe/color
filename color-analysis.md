@@ -108,9 +108,9 @@ color/
 
 **包含内容**：
 - 8个标准颜色打印函数：`Black()`、`Red()`...`White()`
-- 8个标准颜色字符串函数：`BlackString()`...`WhiteString()`
+- 8个标准颜色字符串函数：`SBlack()`...`SWhite()`（返回字符串）
 - 8个高亮颜色打印函数：`HiBlack()`...`HiWhite()`
-- 8个高亮颜色字符串函数：`HiBlackString()`...`HiWhiteString()`
+- 8个高亮颜色字符串函数：`SHiBlack()`...`SHiWhite()`（返回字符串）
 
 **代码统计**：约302行
 
@@ -120,7 +120,7 @@ color/
 
 **包含内容**：
 - 颜色缓存：`colorsCache`、`colorsCacheMu`
-- 辅助函数：`boolPtr()`、`getCachedColor()`、`colorPrint()`、`colorString()`、`sprintln()`
+- 辅助函数：`boolPtr()`、`getCachedColor()`、`colorPrint()`、`colorString()`、`sprintln()`、`clamp255()`
 
 **代码统计**：约95行
 
@@ -317,6 +317,7 @@ func getCachedColor(p Attribute) *Color {
 | 常量注释 | 无注释 | 详细中文注释 | ✅ 已完成 |
 | 全局实例 | 无 | 新增 global.go | ✅ 已完成 |
 | API命名 | XxxString | SXxx 格式 | ✅ 已完成 |
+| RGB参数验证 | 无验证 | 自动截断到0-255 | ✅ 已完成 |
 
 ---
 
@@ -416,6 +417,7 @@ MIT License - 允许自由使用、修改和分发
 | 2026-05-03 | v1.0 | 初始分析报告 |
 | 2026-05-03 | v2.0 | 更新：代码拆分、注释规范化、错误处理修复 |
 | 2026-05-03 | v3.0 | 更新：新增全局实例支持、API命名规范、管道自动检测 |
+| 2026-05-03 | v3.1 | 更新：RGB参数验证（自动截断到0-255） |
 
 ---
 
