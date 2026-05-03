@@ -13,35 +13,30 @@ import (
 )
 
 var (
-	// NoColor defines if the output is colorized or not. It's dynamically set to
-	// false or true based on the stdout's file descriptor referring to a terminal
-	// or not. It's also set to true if the NO_COLOR environment variable is
-	// set (regardless of its value). This is a global option and affects all
-	// colors. For more control over each color block use the methods
-	// DisableColor() individually.
+	// NoColor 定义输出是否着色。它根据 stdout 的文件描述符是否指向终端
+	// 动态设置为 false 或 true。如果设置了 NO_COLOR 环境变量（无论其值是什么），
+	// 它也会被设置为 true。这是一个全局选项，影响所有颜色。
+	// 如需对每个颜色块进行更多控制，请单独使用 DisableColor() 方法。
 	NoColor = noColorIsSet() || os.Getenv("TERM") == "dumb" || !stdoutIsTerminal()
 
-	// Output defines the standard output of the print functions. By default,
-	// stdOut() is used.
+	// Output 定义打印函数的标准输出。默认使用 stdOut()。
 	Output = stdOut()
 
-	// Error defines the standard error of the print functions. By default,
-	// stdErr() is used.
+	// Error 定义打印函数的标准错误输出。默认使用 stdErr()。
 	Error = stdErr()
 
-	// colorsCache is used to reduce the count of created Color objects and
-	// allows to reuse already created objects with required Attribute.
+	// colorsCache 用于减少创建的 Color 对象数量，并允许重用已创建的具有所需 Attribute 的对象。
 	colorsCache   = make(map[Attribute]*Color)
-	colorsCacheMu sync.Mutex // protects colorsCache
+	colorsCacheMu sync.Mutex // 保护 colorsCache
 )
 
-// noColorIsSet returns true if the environment variable NO_COLOR is set to a non-empty string.
+// noColorIsSet 如果环境变量 NO_COLOR 设置为非空字符串，则返回 true。
 func noColorIsSet() bool {
 	return os.Getenv("NO_COLOR") != ""
 }
 
-// stdoutIsTerminal returns true if os.Stdout is a terminal.
-// Returns false if os.Stdout is nil (e.g., when running as a Windows service).
+// stdoutIsTerminal 如果 os.Stdout 是终端，则返回 true。
+// 如果 os.Stdout 为 nil（例如作为 Windows 服务运行时），则返回 false。
 func stdoutIsTerminal() bool {
 	if os.Stdout == nil {
 		return false
@@ -49,8 +44,8 @@ func stdoutIsTerminal() bool {
 	return isatty.IsTerminal(os.Stdout.Fd()) || isatty.IsCygwinTerminal(os.Stdout.Fd())
 }
 
-// stdOut returns a writer for color output.
-// Returns io.Discard if os.Stdout is nil (e.g., when running as a Windows service).
+// stdOut 返回用于颜色输出的写入器。
+// 如果 os.Stdout 为 nil（例如作为 Windows 服务运行时），则返回 io.Discard。
 func stdOut() io.Writer {
 	if os.Stdout == nil {
 		return io.Discard
@@ -58,8 +53,8 @@ func stdOut() io.Writer {
 	return colorable.NewColorableStdout()
 }
 
-// stdErr returns a writer for color error output.
-// Returns io.Discard if os.Stderr is nil (e.g., when running as a Windows service).
+// stdErr 返回用于颜色错误输出的写入器。
+// 如果 os.Stderr 为 nil（例如作为 Windows 服务运行时），则返回 io.Discard。
 func stdErr() io.Writer {
 	if os.Stderr == nil {
 		return io.Discard
@@ -67,18 +62,18 @@ func stdErr() io.Writer {
 	return colorable.NewColorableStderr()
 }
 
-// Color defines a custom color object which is defined by SGR parameters.
+// Color 定义一个由 SGR 参数定义的自定义颜色对象。
 type Color struct {
 	params  []Attribute
 	noColor *bool
 }
 
-// Attribute defines a single SGR Code
+// Attribute 定义单个 SGR 代码
 type Attribute int
 
 const escape = "\x1b"
 
-// Base attributes
+// 基础属性
 const (
 	Reset Attribute = iota
 	Bold
@@ -115,7 +110,7 @@ var mapResetAttributes map[Attribute]Attribute = map[Attribute]Attribute{
 	CrossedOut:   ResetCrossedOut,
 }
 
-// Foreground text colors
+// 前景文本颜色
 const (
 	FgBlack Attribute = iota + 30
 	FgRed
@@ -126,11 +121,11 @@ const (
 	FgCyan
 	FgWhite
 
-	// used internally for 256 and 24-bit coloring
+	// 内部用于 256 色和 24 位着色
 	foreground
 )
 
-// Foreground Hi-Intensity text colors
+// 前景高亮文本颜色
 const (
 	FgHiBlack Attribute = iota + 90
 	FgHiRed
@@ -142,7 +137,7 @@ const (
 	FgHiWhite
 )
 
-// Background text colors
+// 背景文本颜色
 const (
 	BgBlack Attribute = iota + 40
 	BgRed
@@ -153,11 +148,11 @@ const (
 	BgCyan
 	BgWhite
 
-	// used internally for 256 and 24-bit coloring
+	// 内部用于 256 色和 24 位着色
 	background
 )
 
-// Background Hi-Intensity text colors
+// 背景高亮文本颜色
 const (
 	BgHiBlack Attribute = iota + 100
 	BgHiRed
@@ -169,7 +164,7 @@ const (
 	BgHiWhite
 )
 
-// New returns a newly created color object.
+// New 返回一个新创建的颜色对象。
 func New(value ...Attribute) *Color {
 	c := &Color{
 		params: make([]Attribute, 0),
@@ -183,40 +178,39 @@ func New(value ...Attribute) *Color {
 	return c
 }
 
-// RGB returns a new foreground color in 24-bit RGB.
+// RGB 返回一个新的 24 位 RGB 前景色。
 func RGB(r, g, b int) *Color {
 	return New(foreground, 2, Attribute(r), Attribute(g), Attribute(b))
 }
 
-// BgRGB returns a new background color in 24-bit RGB.
+// BgRGB 返回一个新的 24 位 RGB 背景色。
 func BgRGB(r, g, b int) *Color {
 	return New(background, 2, Attribute(r), Attribute(g), Attribute(b))
 }
 
-// AddRGB is used to chain foreground RGB SGR parameters. Use as many as parameters to combine
-// and create custom color objects. Example: .Add(34, 0, 12).Add(255, 128, 0).
+// AddRGB 用于链式添加前景 RGB SGR 参数。可以使用任意数量的参数进行组合
+// 并创建自定义颜色对象。示例：.Add(34, 0, 12).Add(255, 128, 0)。
 func (c *Color) AddRGB(r, g, b int) *Color {
 	c.params = append(c.params, foreground, 2, Attribute(r), Attribute(g), Attribute(b))
 	return c
 }
 
-// AddRGB is used to chain background RGB SGR parameters. Use as many as parameters to combine
-// and create custom color objects. Example: .Add(34, 0, 12).Add(255, 128, 0).
+// AddBgRGB 用于链式添加背景 RGB SGR 参数。可以使用任意数量的参数进行组合
+// 并创建自定义颜色对象。示例：.Add(34, 0, 12).Add(255, 128, 0)。
 func (c *Color) AddBgRGB(r, g, b int) *Color {
 	c.params = append(c.params, background, 2, Attribute(r), Attribute(g), Attribute(b))
 	return c
 }
 
-// Set sets the given parameters immediately. It will change the color of
-// output with the given SGR parameters until color.Unset() is called.
+// Set 立即设置给定的参数。它将使用给定的 SGR 参数更改输出颜色，
+// 直到调用 color.Unset() 为止。
 func Set(p ...Attribute) *Color {
 	c := New(p...)
 	c.Set()
 	return c
 }
 
-// Unset resets all escape attributes and clears the output. Usually should
-// be called after Set().
+// Unset 重置所有转义属性并清除输出。通常在 Set() 之后调用。
 func Unset() {
 	if NoColor {
 		return
@@ -225,7 +219,7 @@ func Unset() {
 	fmt.Fprintf(Output, "%s[%dm", escape, Reset)
 }
 
-// Set sets the SGR sequence.
+// Set 设置 SGR 序列。
 func (c *Color) Set() *Color {
 	if c.isNoColorSet() {
 		return c
@@ -243,9 +237,8 @@ func (c *Color) unset() {
 	Unset()
 }
 
-// SetWriter is used to set the SGR sequence with the given io.Writer. This is
-// a low-level function, and users should use the higher-level functions, such
-// as color.Fprint, color.Print, etc.
+// SetWriter 用于使用给定的 io.Writer 设置 SGR 序列。这是一个底层函数，
+// 用户应该使用更高级的函数，如 color.Fprint、color.Print 等。
 func (c *Color) SetWriter(w io.Writer) *Color {
 	_, _ = c.setWriter(w)
 	return c
@@ -259,8 +252,8 @@ func (c *Color) setWriter(w io.Writer) (int, error) {
 	return fmt.Fprint(w, c.format())
 }
 
-// UnsetWriter resets all escape attributes and clears the output with the give
-// io.Writer. Usually should be called after SetWriter().
+// UnsetWriter 使用给定的 io.Writer 重置所有转义属性并清除输出。
+// 通常在 SetWriter() 之后调用。
 func (c *Color) UnsetWriter(w io.Writer) {
 	_, _ = c.unsetWriter(w)
 }
@@ -273,18 +266,17 @@ func (c *Color) unsetWriter(w io.Writer) (int, error) {
 	return fmt.Fprintf(w, "%s[%dm", escape, Reset)
 }
 
-// Add is used to chain SGR parameters. Use as many as parameters to combine
-// and create custom color objects. Example: Add(color.FgRed, color.Underline).
+// Add 用于链式添加 SGR 参数。可以使用任意数量的参数进行组合
+// 并创建自定义颜色对象。示例：Add(color.FgRed, color.Underline)。
 func (c *Color) Add(value ...Attribute) *Color {
 	c.params = append(c.params, value...)
 	return c
 }
 
-// Fprint formats using the default formats for its operands and writes to w.
-// Spaces are added between operands when neither is a string.
-// It returns the number of bytes written and any write error encountered.
-// On Windows, users should wrap w with colorable.NewColorable() if w is of
-// type *os.File.
+// Fprint 使用其操作数的默认格式进行格式化并写入 w。
+// 当操作数都不是字符串时，在它们之间添加空格。
+// 它返回写入的字节数和遇到的任何写入错误。
+// 在 Windows 上，如果 w 是 *os.File 类型，用户应该用 colorable.NewColorable() 包装 w。
 func (c *Color) Fprint(w io.Writer, a ...interface{}) (n int, err error) {
 	n, err = c.setWriter(w)
 	if err != nil {
@@ -302,11 +294,10 @@ func (c *Color) Fprint(w io.Writer, a ...interface{}) (n int, err error) {
 	return n, err
 }
 
-// Print formats using the default formats for its operands and writes to
-// standard output. Spaces are added between operands when neither is a
-// string. It returns the number of bytes written and any write error
-// encountered. This is the standard fmt.Print() method wrapped with the given
-// color.
+// Print 使用其操作数的默认格式进行格式化并写入标准输出。
+// 当操作数都不是字符串时，在它们之间添加空格。
+// 它返回写入的字节数和遇到的任何写入错误。
+// 这是用给定颜色包装的标准 fmt.Print() 方法。
 func (c *Color) Print(a ...interface{}) (n int, err error) {
 	c.Set()
 	defer c.unset()
@@ -314,10 +305,9 @@ func (c *Color) Print(a ...interface{}) (n int, err error) {
 	return fmt.Fprint(Output, a...)
 }
 
-// Fprintf formats according to a format specifier and writes to w.
-// It returns the number of bytes written and any write error encountered.
-// On Windows, users should wrap w with colorable.NewColorable() if w is of
-// type *os.File.
+// Fprintf 根据格式说明符进行格式化并写入 w。
+// 它返回写入的字节数和遇到的任何写入错误。
+// 在 Windows 上，如果 w 是 *os.File 类型，用户应该用 colorable.NewColorable() 包装 w。
 func (c *Color) Fprintf(w io.Writer, format string, a ...interface{}) (n int, err error) {
 	n, err = c.setWriter(w)
 	if err != nil {
@@ -335,9 +325,9 @@ func (c *Color) Fprintf(w io.Writer, format string, a ...interface{}) (n int, er
 	return n, err
 }
 
-// Printf formats according to a format specifier and writes to standard output.
-// It returns the number of bytes written and any write error encountered.
-// This is the standard fmt.Printf() method wrapped with the given color.
+// Printf 根据格式说明符进行格式化并写入标准输出。
+// 它返回写入的字节数和遇到的任何写入错误。
+// 这是用给定颜色包装的标准 fmt.Printf() 方法。
 func (c *Color) Printf(format string, a ...interface{}) (n int, err error) {
 	c.Set()
 	defer c.unset()
@@ -345,89 +335,80 @@ func (c *Color) Printf(format string, a ...interface{}) (n int, err error) {
 	return fmt.Fprintf(Output, format, a...)
 }
 
-// Fprintln formats using the default formats for its operands and writes to w.
-// Spaces are always added between operands and a newline is appended.
-// On Windows, users should wrap w with colorable.NewColorable() if w is of
-// type *os.File.
+// Fprintln 使用其操作数的默认格式进行格式化并写入 w。
+// 操作数之间始终添加空格，并追加换行符。
+// 在 Windows 上，如果 w 是 *os.File 类型，用户应该用 colorable.NewColorable() 包装 w。
 func (c *Color) Fprintln(w io.Writer, a ...interface{}) (n int, err error) {
 	return fmt.Fprintln(w, c.wrap(sprintln(a...)))
 }
 
-// Println formats using the default formats for its operands and writes to
-// standard output. Spaces are always added between operands and a newline is
-// appended. It returns the number of bytes written and any write error
-// encountered. This is the standard fmt.Print() method wrapped with the given
-// color.
+// Println 使用其操作数的默认格式进行格式化并写入标准输出。
+// 操作数之间始终添加空格，并追加换行符。
+// 它返回写入的字节数和遇到的任何写入错误。
+// 这是用给定颜色包装的标准 fmt.Print() 方法。
 func (c *Color) Println(a ...interface{}) (n int, err error) {
 	return fmt.Fprintln(Output, c.wrap(sprintln(a...)))
 }
 
-// Sprint is just like Print, but returns a string instead of printing it.
+// Sprint 类似于 Print，但返回字符串而不是打印它。
 func (c *Color) Sprint(a ...interface{}) string {
 	return c.wrap(fmt.Sprint(a...))
 }
 
-// Sprintln is just like Println, but returns a string instead of printing it.
+// Sprintln 类似于 Println，但返回字符串而不是打印它。
 func (c *Color) Sprintln(a ...interface{}) string {
 	return c.wrap(sprintln(a...)) + "\n"
 }
 
-// Sprintf is just like Printf, but returns a string instead of printing it.
+// Sprintf 类似于 Printf，但返回字符串而不是打印它。
 func (c *Color) Sprintf(format string, a ...interface{}) string {
 	return c.wrap(fmt.Sprintf(format, a...))
 }
 
-// FprintFunc returns a new function that prints the passed arguments as
-// colorized with color.Fprint().
+// FprintFunc 返回一个新函数，该函数使用 color.Fprint() 将传入的参数打印为彩色。
 func (c *Color) FprintFunc() func(w io.Writer, a ...interface{}) {
 	return func(w io.Writer, a ...interface{}) {
 		c.Fprint(w, a...)
 	}
 }
 
-// PrintFunc returns a new function that prints the passed arguments as
-// colorized with color.Print().
+// PrintFunc 返回一个新函数，该函数使用 color.Print() 将传入的参数打印为彩色。
 func (c *Color) PrintFunc() func(a ...interface{}) {
 	return func(a ...interface{}) {
 		c.Print(a...)
 	}
 }
 
-// FprintfFunc returns a new function that prints the passed arguments as
-// colorized with color.Fprintf().
+// FprintfFunc 返回一个新函数，该函数使用 color.Fprintf() 将传入的参数打印为彩色。
 func (c *Color) FprintfFunc() func(w io.Writer, format string, a ...interface{}) {
 	return func(w io.Writer, format string, a ...interface{}) {
 		c.Fprintf(w, format, a...)
 	}
 }
 
-// PrintfFunc returns a new function that prints the passed arguments as
-// colorized with color.Printf().
+// PrintfFunc 返回一个新函数，该函数使用 color.Printf() 将传入的参数打印为彩色。
 func (c *Color) PrintfFunc() func(format string, a ...interface{}) {
 	return func(format string, a ...interface{}) {
 		c.Printf(format, a...)
 	}
 }
 
-// FprintlnFunc returns a new function that prints the passed arguments as
-// colorized with color.Fprintln().
+// FprintlnFunc 返回一个新函数，该函数使用 color.Fprintln() 将传入的参数打印为彩色。
 func (c *Color) FprintlnFunc() func(w io.Writer, a ...interface{}) {
 	return func(w io.Writer, a ...interface{}) {
 		c.Fprintln(w, a...)
 	}
 }
 
-// PrintlnFunc returns a new function that prints the passed arguments as
-// colorized with color.Println().
+// PrintlnFunc 返回一个新函数，该函数使用 color.Println() 将传入的参数打印为彩色。
 func (c *Color) PrintlnFunc() func(a ...interface{}) {
 	return func(a ...interface{}) {
 		c.Println(a...)
 	}
 }
 
-// SprintFunc returns a new function that returns colorized strings for the
-// given arguments with fmt.Sprint(). Useful to put into or mix into other
-// string. Windows users should use this in conjunction with color.Output, example:
+// SprintFunc 返回一个新函数，该函数使用 fmt.Sprint() 为给定参数返回彩色字符串。
+// 可用于放入或混合到其他字符串中。Windows 用户应将其与 color.Output 一起使用，示例：
 //
 //	put := New(FgYellow).SprintFunc()
 //	fmt.Fprintf(color.Output, "This is a %s", put("warning"))
@@ -437,26 +418,24 @@ func (c *Color) SprintFunc() func(a ...interface{}) string {
 	}
 }
 
-// SprintfFunc returns a new function that returns colorized strings for the
-// given arguments with fmt.Sprintf(). Useful to put into or mix into other
-// string. Windows users should use this in conjunction with color.Output.
+// SprintfFunc 返回一个新函数，该函数使用 fmt.Sprintf() 为给定参数返回彩色字符串。
+// 可用于放入或混合到其他字符串中。Windows 用户应将其与 color.Output 一起使用。
 func (c *Color) SprintfFunc() func(format string, a ...interface{}) string {
 	return func(format string, a ...interface{}) string {
 		return c.wrap(fmt.Sprintf(format, a...))
 	}
 }
 
-// SprintlnFunc returns a new function that returns colorized strings for the
-// given arguments with fmt.Sprintln(). Useful to put into or mix into other
-// string. Windows users should use this in conjunction with color.Output.
+// SprintlnFunc 返回一个新函数，该函数使用 fmt.Sprintln() 为给定参数返回彩色字符串。
+// 可用于放入或混合到其他字符串中。Windows 用户应将其与 color.Output 一起使用。
 func (c *Color) SprintlnFunc() func(a ...interface{}) string {
 	return func(a ...interface{}) string {
 		return c.wrap(sprintln(a...)) + "\n"
 	}
 }
 
-// sequence returns a formatted SGR sequence to be plugged into a "\x1b[...m"
-// an example output might be: "1;36" -> bold cyan
+// sequence 返回格式化的 SGR 序列，用于插入 "\x1b[...m"
+// 示例输出可能是："1;36" -> 粗体青色
 func (c *Color) sequence() string {
 	format := make([]string, len(c.params))
 	for i, v := range c.params {
@@ -466,8 +445,7 @@ func (c *Color) sequence() string {
 	return strings.Join(format, ";")
 }
 
-// wrap wraps the s string with the colors attributes. The string is ready to
-// be printed.
+// wrap 用颜色属性包装字符串 s。该字符串可以直接打印。
 func (c *Color) wrap(s string) string {
 	if c.isNoColorSet() {
 		return s
@@ -482,7 +460,7 @@ func (c *Color) format() string {
 
 func (c *Color) unformat() string {
 	//return fmt.Sprintf("%s[%dm", escape, Reset)
-	//for each element in sequence let's use the specific reset escape, or the generic one if not found
+	//对于序列中的每个元素，让我们使用特定的重置转义，如果未找到则使用通用重置
 	format := make([]string, len(c.params))
 	for i, v := range c.params {
 		format[i] = strconv.Itoa(int(Reset))
@@ -495,30 +473,28 @@ func (c *Color) unformat() string {
 	return fmt.Sprintf("%s[%sm", escape, strings.Join(format, ";"))
 }
 
-// DisableColor disables the color output. Useful to not change any existing
-// code and still being able to output. Can be used for flags like
-// "--no-color". To enable back use EnableColor() method.
+// DisableColor 禁用颜色输出。可用于在不更改任何现有代码的情况下仍然能够输出。
+// 可用于 "--no-color" 等标志。要重新启用，请使用 EnableColor() 方法。
 func (c *Color) DisableColor() {
 	c.noColor = boolPtr(true)
 }
 
-// EnableColor enables the color output. Use it in conjunction with
-// DisableColor(). Otherwise, this method has no side effects.
+// EnableColor 启用颜色输出。与 DisableColor() 一起使用。否则，此方法没有副作用。
 func (c *Color) EnableColor() {
 	c.noColor = boolPtr(false)
 }
 
 func (c *Color) isNoColorSet() bool {
-	// check first if we have user set action
+	// 首先检查是否有用户设置的选项
 	if c.noColor != nil {
 		return *c.noColor
 	}
 
-	// if not return the global option, which is disabled by default
+	// 如果没有，则返回全局选项，默认情况下是禁用的
 	return NoColor
 }
 
-// Equals returns a boolean value indicating whether two colors are equal.
+// Equals 返回一个布尔值，指示两种颜色是否相等。
 func (c *Color) Equals(c2 *Color) bool {
 	if c == nil && c2 == nil {
 		return true
@@ -587,147 +563,115 @@ func colorString(format string, p Attribute, a ...interface{}) string {
 	return c.SprintfFunc()(format, a...)
 }
 
-// Black is a convenient helper function to print with black foreground. A
-// newline is appended to format by default.
+// Black 是一个便捷的辅助函数，用于以黑色前景打印。默认会在 format 末尾追加换行符。
 func Black(format string, a ...interface{}) { colorPrint(format, FgBlack, a...) }
 
-// Red is a convenient helper function to print with red foreground. A
-// newline is appended to format by default.
+// Red 是一个便捷的辅助函数，用于以红色前景打印。默认会在 format 末尾追加换行符。
 func Red(format string, a ...interface{}) { colorPrint(format, FgRed, a...) }
 
-// Green is a convenient helper function to print with green foreground. A
-// newline is appended to format by default.
+// Green 是一个便捷的辅助函数，用于以绿色前景打印。默认会在 format 末尾追加换行符。
 func Green(format string, a ...interface{}) { colorPrint(format, FgGreen, a...) }
 
-// Yellow is a convenient helper function to print with yellow foreground.
-// A newline is appended to format by default.
+// Yellow 是一个便捷的辅助函数，用于以黄色前景打印。默认会在 format 末尾追加换行符。
 func Yellow(format string, a ...interface{}) { colorPrint(format, FgYellow, a...) }
 
-// Blue is a convenient helper function to print with blue foreground. A
-// newline is appended to format by default.
+// Blue 是一个便捷的辅助函数，用于以蓝色前景打印。默认会在 format 末尾追加换行符。
 func Blue(format string, a ...interface{}) { colorPrint(format, FgBlue, a...) }
 
-// Magenta is a convenient helper function to print with magenta foreground.
-// A newline is appended to format by default.
+// Magenta 是一个便捷的辅助函数，用于以洋红色前景打印。默认会在 format 末尾追加换行符。
 func Magenta(format string, a ...interface{}) { colorPrint(format, FgMagenta, a...) }
 
-// Cyan is a convenient helper function to print with cyan foreground. A
-// newline is appended to format by default.
+// Cyan 是一个便捷的辅助函数，用于以青色前景打印。默认会在 format 末尾追加换行符。
 func Cyan(format string, a ...interface{}) { colorPrint(format, FgCyan, a...) }
 
-// White is a convenient helper function to print with white foreground. A
-// newline is appended to format by default.
+// White 是一个便捷的辅助函数，用于以白色前景打印。默认会在 format 末尾追加换行符。
 func White(format string, a ...interface{}) { colorPrint(format, FgWhite, a...) }
 
-// BlackString is a convenient helper function to return a string with black
-// foreground.
+// BlackString 是一个便捷的辅助函数，用于返回带有黑色前景的字符串。
 func BlackString(format string, a ...interface{}) string { return colorString(format, FgBlack, a...) }
 
-// RedString is a convenient helper function to return a string with red
-// foreground.
+// RedString 是一个便捷的辅助函数，用于返回带有红色前景的字符串。
 func RedString(format string, a ...interface{}) string { return colorString(format, FgRed, a...) }
 
-// GreenString is a convenient helper function to return a string with green
-// foreground.
+// GreenString 是一个便捷的辅助函数，用于返回带有绿色前景的字符串。
 func GreenString(format string, a ...interface{}) string { return colorString(format, FgGreen, a...) }
 
-// YellowString is a convenient helper function to return a string with yellow
-// foreground.
+// YellowString 是一个便捷的辅助函数，用于返回带有黄色前景的字符串。
 func YellowString(format string, a ...interface{}) string { return colorString(format, FgYellow, a...) }
 
-// BlueString is a convenient helper function to return a string with blue
-// foreground.
+// BlueString 是一个便捷的辅助函数，用于返回带有蓝色前景的字符串。
 func BlueString(format string, a ...interface{}) string { return colorString(format, FgBlue, a...) }
 
-// MagentaString is a convenient helper function to return a string with magenta
-// foreground.
+// MagentaString 是一个便捷的辅助函数，用于返回带有洋红色前景的字符串。
 func MagentaString(format string, a ...interface{}) string {
 	return colorString(format, FgMagenta, a...)
 }
 
-// CyanString is a convenient helper function to return a string with cyan
-// foreground.
+// CyanString 是一个便捷的辅助函数，用于返回带有青色前景的字符串。
 func CyanString(format string, a ...interface{}) string { return colorString(format, FgCyan, a...) }
 
-// WhiteString is a convenient helper function to return a string with white
-// foreground.
+// WhiteString 是一个便捷的辅助函数，用于返回带有白色前景的字符串。
 func WhiteString(format string, a ...interface{}) string { return colorString(format, FgWhite, a...) }
 
-// HiBlack is a convenient helper function to print with hi-intensity black foreground. A
-// newline is appended to format by default.
+// HiBlack 是一个便捷的辅助函数，用于以高亮黑色前景打印。默认会在 format 末尾追加换行符。
 func HiBlack(format string, a ...interface{}) { colorPrint(format, FgHiBlack, a...) }
 
-// HiRed is a convenient helper function to print with hi-intensity red foreground. A
-// newline is appended to format by default.
+// HiRed 是一个便捷的辅助函数，用于以高亮红色前景打印。默认会在 format 末尾追加换行符。
 func HiRed(format string, a ...interface{}) { colorPrint(format, FgHiRed, a...) }
 
-// HiGreen is a convenient helper function to print with hi-intensity green foreground. A
-// newline is appended to format by default.
+// HiGreen 是一个便捷的辅助函数，用于以高亮绿色前景打印。默认会在 format 末尾追加换行符。
 func HiGreen(format string, a ...interface{}) { colorPrint(format, FgHiGreen, a...) }
 
-// HiYellow is a convenient helper function to print with hi-intensity yellow foreground.
-// A newline is appended to format by default.
+// HiYellow 是一个便捷的辅助函数，用于以高亮黄色前景打印。默认会在 format 末尾追加换行符。
 func HiYellow(format string, a ...interface{}) { colorPrint(format, FgHiYellow, a...) }
 
-// HiBlue is a convenient helper function to print with hi-intensity blue foreground. A
-// newline is appended to format by default.
+// HiBlue 是一个便捷的辅助函数，用于以高亮蓝色前景打印。默认会在 format 末尾追加换行符。
 func HiBlue(format string, a ...interface{}) { colorPrint(format, FgHiBlue, a...) }
 
-// HiMagenta is a convenient helper function to print with hi-intensity magenta foreground.
-// A newline is appended to format by default.
+// HiMagenta 是一个便捷的辅助函数，用于以高亮洋红色前景打印。默认会在 format 末尾追加换行符。
 func HiMagenta(format string, a ...interface{}) { colorPrint(format, FgHiMagenta, a...) }
 
-// HiCyan is a convenient helper function to print with hi-intensity cyan foreground. A
-// newline is appended to format by default.
+// HiCyan 是一个便捷的辅助函数，用于以高亮青色前景打印。默认会在 format 末尾追加换行符。
 func HiCyan(format string, a ...interface{}) { colorPrint(format, FgHiCyan, a...) }
 
-// HiWhite is a convenient helper function to print with hi-intensity white foreground. A
-// newline is appended to format by default.
+// HiWhite 是一个便捷的辅助函数，用于以高亮白色前景打印。默认会在 format 末尾追加换行符。
 func HiWhite(format string, a ...interface{}) { colorPrint(format, FgHiWhite, a...) }
 
-// HiBlackString is a convenient helper function to return a string with hi-intensity black
-// foreground.
+// HiBlackString 是一个便捷的辅助函数，用于返回带有高亮黑色前景的字符串。
 func HiBlackString(format string, a ...interface{}) string {
 	return colorString(format, FgHiBlack, a...)
 }
 
-// HiRedString is a convenient helper function to return a string with hi-intensity red
-// foreground.
+// HiRedString 是一个便捷的辅助函数，用于返回带有高亮红色前景的字符串。
 func HiRedString(format string, a ...interface{}) string { return colorString(format, FgHiRed, a...) }
 
-// HiGreenString is a convenient helper function to return a string with hi-intensity green
-// foreground.
+// HiGreenString 是一个便捷的辅助函数，用于返回带有高亮绿色前景的字符串。
 func HiGreenString(format string, a ...interface{}) string {
 	return colorString(format, FgHiGreen, a...)
 }
 
-// HiYellowString is a convenient helper function to return a string with hi-intensity yellow
-// foreground.
+// HiYellowString 是一个便捷的辅助函数，用于返回带有高亮黄色前景的字符串。
 func HiYellowString(format string, a ...interface{}) string {
 	return colorString(format, FgHiYellow, a...)
 }
 
-// HiBlueString is a convenient helper function to return a string with hi-intensity blue
-// foreground.
+// HiBlueString 是一个便捷的辅助函数，用于返回带有高亮蓝色前景的字符串。
 func HiBlueString(format string, a ...interface{}) string { return colorString(format, FgHiBlue, a...) }
 
-// HiMagentaString is a convenient helper function to return a string with hi-intensity magenta
-// foreground.
+// HiMagentaString 是一个便捷的辅助函数，用于返回带有高亮洋红色前景的字符串。
 func HiMagentaString(format string, a ...interface{}) string {
 	return colorString(format, FgHiMagenta, a...)
 }
 
-// HiCyanString is a convenient helper function to return a string with hi-intensity cyan
-// foreground.
+// HiCyanString 是一个便捷的辅助函数，用于返回带有高亮青色前景的字符串。
 func HiCyanString(format string, a ...interface{}) string { return colorString(format, FgHiCyan, a...) }
 
-// HiWhiteString is a convenient helper function to return a string with hi-intensity white
-// foreground.
+// HiWhiteString 是一个便捷的辅助函数，用于返回带有高亮白色前景的字符串。
 func HiWhiteString(format string, a ...interface{}) string {
 	return colorString(format, FgHiWhite, a...)
 }
 
-// sprintln is a helper function to format a string with fmt.Sprintln and trim the trailing newline.
+// sprintln 是一个辅助函数，用于使用 fmt.Sprintln 格式化字符串并去除末尾的换行符。
 func sprintln(a ...interface{}) string {
 	return strings.TrimSuffix(fmt.Sprintln(a...), "\n")
 }
