@@ -34,7 +34,7 @@
 
 `color` 是一个轻量级的 Go 语言库，用于在终端中输出彩色文本。它提供了简单易用的 API，支持 ANSI 颜色代码、256色、RGB真彩色，以及多种文本样式（加粗、斜体、下划线等）。
 
-> 📌 **项目来源**: 本项目基于 [github.com/fatih/color](https://github.com/fatih/color) (v1.19.0) 进行二次开发和改造，添加了完整的中文注释、代码模块化拆分，以及更详细的文档说明。感谢 [Fatih Arslan](https://github.com/fatih) 和原项目的所有贡献者！
+> 📌 **项目来源**: 本项目基于 [github.com/fatih/color](https://github.com/fatih/color) (v1.19.0) 进行二次开发和改造，添加了完整的中文注释、代码模块化拆分、全局实例支持、以及更详细的文档说明。感谢 [Fatih Arslan](https://github.com/fatih) 和原项目的所有贡献者！
 
 ### ✨ 为什么选择 color？
 

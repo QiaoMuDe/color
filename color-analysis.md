@@ -22,6 +22,7 @@ color/
 ├── output.go           # 输出控制（全局变量、终端检测）
 ├── helper.go           # 便捷函数（Black/Red/Green等32个函数）
 ├── utils.go            # 内部工具函数（缓存、辅助函数）
+├── global.go           # 全局实例支持（GlobalColor、StyleConfig）
 ├── color_test.go       # 单元测试文件
 └── color_windows.go    # Windows平台特定实现文件
 ```
@@ -48,6 +49,7 @@ color/
 |----------|----------|--------------|----------|
 | 颜色属性定义 | SGR代码、颜色常量定义 | attribute.go | 基础定义模块 |
 | ANSI颜色输出 | 提供终端彩色文本输出能力 | color.go | 业务核心模块 |
+| 全局实例支持 | 提供线程安全的全局颜色实例 | global.go | 业务核心模块 |
 | 输出控制 | 全局配置、终端检测、标准输出 | output.go | 配置控制模块 |
 | 便捷函数集 | 预定义颜色的快速调用函数 | helper.go | 业务核心模块 |
 | 内部工具 | 缓存机制、辅助函数 | utils.go | 基础支撑模块 |
@@ -122,7 +124,32 @@ color/
 
 **代码统计**：约95行
 
-#### 2.2.6 color_windows.go - Windows平台适配
+#### 2.2.6 global.go - 全局实例支持
+
+**核心功能**：提供线程安全的全局颜色实例，支持独立配置和样式管理
+
+**包含内容**：
+- `GlobalColor` 结构体定义（config、color、mu字段）
+- `StyleConfig` 结构体定义（NoColor、Bold、Underline等样式配置）
+- 配置方法：`SetConfig()`、`GetConfig()`、`GetConfigClone()`、`SetNoColor()`、`SetBold()`等
+- 颜色快捷方法：`Red()`、`Green()`、`Blue()`等8个标准色
+- 字符串方法：`SRed()`、`SGreen()`等8个返回字符串的颜色方法
+- 高亮颜色方法：`HiRed()`、`HiGreen()`等7个高亮色
+- 高亮字符串方法：`SHiRed()`、`SHiGreen()`等7个返回字符串的高亮方法
+- 日志级别方法：`Info()`、`Success()`、`Warning()`、`Error()`、`Debug()`
+- 终端前缀方法：`Ok()`、`Warn()`、`Err()`
+- 单例模式：`GetGlobal()`、`ResetGlobal()`、`initGlobal()`
+
+**代码统计**：约520行
+
+**特点**：
+- 线程安全：使用 `sync.RWMutex` 保证并发安全
+- 配置独立：拥有独立的 `StyleConfig` 配置，不影响全局 `NoColor` 变量
+- 对象复用：内部复用单个 `Color` 对象，避免频繁创建
+- 链式调用：配置方法支持链式调用
+- 默认行为：默认启用加粗样式，自动继承全局 `NoColor` 设置
+
+#### 2.2.7 color_windows.go - Windows平台适配
 
 **核心功能**：在Windows系统上启用虚拟终端处理
 
@@ -139,6 +166,7 @@ graph TD
     A[用户代码] --> B[helper.go 便捷函数]
     A --> C[color.go Color API]
     A --> D[output.go Set/Unset]
+    A --> P[global.go 全局实例]
     
     B --> E[utils.go colorPrint]
     E --> F[utils.go getCachedColor]
@@ -150,6 +178,9 @@ graph TD
     
     D --> J[output.go 全局变量]
     J --> K[NoColor/Output/Error]
+    
+    P --> Q[global.go StyleConfig]
+    P --> G
     
     G --> L[attribute.go Attribute]
     
@@ -166,6 +197,8 @@ graph TD
 | color.go | utils.go | 函数依赖（sprintln） |
 | helper.go | utils.go | 函数依赖（colorPrint、colorString） |
 | utils.go | color.go | 函数依赖（New） |
+| global.go | color.go | 类型依赖（Color、Attribute） |
+| global.go | output.go | 变量依赖（NoColor） |
 | output.go | - | 无依赖（基础配置） |
 | color_windows.go | - | 系统调用 |
 
@@ -278,10 +311,12 @@ func getCachedColor(p Attribute) *Color {
 
 | 改进项 | 改进前 | 改进后 | 状态 |
 |--------|--------|--------|------|
-| 文件拆分 | 单文件677行 | 5个文件，职责分离 | ✅ 已完成 |
+| 文件拆分 | 单文件677行 | 6个文件，职责分离 | ✅ 已完成 |
 | 注释规范 | 简单注释 | 统一格式，中文注释 | ✅ 已完成 |
 | 错误处理 | 隐式忽略 | 显式忽略（_, _ =） | ✅ 已完成 |
 | 常量注释 | 无注释 | 详细中文注释 | ✅ 已完成 |
+| 全局实例 | 无 | 新增 global.go | ✅ 已完成 |
+| API命名 | XxxString | SXxx 格式 | ✅ 已完成 |
 
 ---
 
@@ -306,9 +341,10 @@ func getCachedColor(p Attribute) *Color {
 | output.go | ~82行 | 输出控制 |
 | helper.go | ~302行 | 便捷函数 |
 | utils.go | ~95行 | 内部工具函数 |
+| global.go | ~520行 | 全局实例支持 |
 | color_test.go | ~670行 | 单元测试 |
 | color_windows.go | ~22行 | Windows适配 |
-| **总计** | **~1852行** | 拆分后总计 |
+| **总计** | **~2372行** | 拆分后总计 |
 
 ### 6.3 扩展性评估
 
@@ -325,21 +361,25 @@ func getCachedColor(p Attribute) *Color {
 
 ### 7.1 项目核心特点
 
-1. **模块化设计**：代码按功能拆分为5个文件，职责清晰
+1. **模块化设计**：代码按功能拆分为6个文件，职责清晰
 2. **完善注释**：所有导出函数都有规范的中文注释
 3. **代码质量**：通过golangci-lint检查，无errcheck警告
-4. **轻量高效**：依赖精简，性能优化（缓存机制）
-5. **API友好**：提供便捷函数和链式调用两种使用方式
-6. **跨平台**：原生支持Windows和Unix-like系统
+4. **轻量高效**：依赖精简，性能优化（缓存机制、对象复用）
+5. **API友好**：提供便捷函数、链式调用和全局实例三种使用方式
+6. **全局实例**：线程安全的单例模式，支持独立配置和样式管理
+7. **跨平台**：原生支持Windows和Unix-like系统
 
 ### 7.2 改进成果
 
 | 改进项目 | 改进内容 | 效果 |
 |----------|----------|------|
-| 代码拆分 | 单文件→5文件 | 职责分离，易于维护 |
+| 代码拆分 | 单文件→6文件 | 职责分离，易于维护 |
 | 注释规范化 | 统一注释格式 | 提升可读性，便于使用 |
 | 错误处理 | 显式忽略错误 | 消除lint警告，代码规范 |
 | 常量注释 | 添加详细注释 | 便于理解颜色属性含义 |
+| 全局实例 | 新增 global.go | 提供线程安全的单例模式 |
+| API命名 | XxxString→SXxx | 符合标准库命名惯例 |
+| 管道检测 | 自动检测终端 | 管道输出时自动禁用颜色 |
 
 ### 7.3 关键记忆点
 
@@ -350,12 +390,16 @@ func getCachedColor(p Attribute) *Color {
   - `output.go` - 全局配置和终端检测
   - `helper.go` - 32个便捷函数
   - `utils.go` - 缓存和辅助函数
+  - `global.go` - 全局实例支持（GlobalColor、StyleConfig）
 - **使用方式**：
   - 便捷函数：`color.Red("text")`
   - 链式API：`color.New(color.FgRed).Add(color.Bold).Print("text")`
+  - 全局实例：`color.GetGlobal().Red("text")`
 - **缓存机制**：`utils.go`中的`colorsCache`缓存单属性Color对象
+- **全局实例**：`global.go`提供线程安全的单例模式，支持配置克隆和对象复用
 - **平台适配**：`color_windows.go`的`init()`启用Windows VT处理
-- **颜色禁用**：支持全局`NoColor`变量和`NO_COLOR`环境变量
+- **颜色禁用**：支持全局`NoColor`变量、`NO_COLOR`环境变量、管道自动检测
+- **API命名**：字符串返回方法使用 `SXxx` 格式（如 `SRed`、`SHiGreen`）
 
 ---
 
@@ -371,7 +415,8 @@ MIT License - 允许自由使用、修改和分发
 |------|------|----------|
 | 2026-05-03 | v1.0 | 初始分析报告 |
 | 2026-05-03 | v2.0 | 更新：代码拆分、注释规范化、错误处理修复 |
+| 2026-05-03 | v3.0 | 更新：新增全局实例支持、API命名规范、管道自动检测 |
 
 ---
 
-> **报告状态**：已更新项目记忆，反映代码拆分和注释规范化后的最新状态
+> **报告状态**：已更新项目记忆，反映全局实例支持和API命名规范后的最新状态
