@@ -51,10 +51,11 @@ func (s *StyleConfig) Clone() *StyleConfig {
 
 // defaultStyleConfig 返回默认样式配置
 // 默认启用颜色输出和加粗样式
+// NoColor 会根据全局 NoColor 变量自动判断（考虑环境变量和终端检测）
 func defaultStyleConfig() *StyleConfig {
 	return &StyleConfig{
-		NoColor:    false,
-		Bold:       true, // 默认启用加粗
+		NoColor:    NoColor, // 使用全局 NoColor 判断（包含 NO_COLOR 环境变量和终端检测）
+		Bold:       true,    // 默认启用加粗
 		Underline:  false,
 		Italic:     false,
 		Blink:      false,

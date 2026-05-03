@@ -49,8 +49,8 @@ func main() {
 	println()
 
 	// 获取带颜色的字符串（不直接打印）
-	redStr := color.RedString("红色字符串")
-	greenStr := color.GreenString("绿色字符串")
+	redStr := color.SRed("红色字符串")
+	greenStr := color.SGreen("绿色字符串")
 	println("组合输出:", redStr, "+", greenStr)
 
 	println()
