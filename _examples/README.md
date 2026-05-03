@@ -11,6 +11,9 @@ _examples/
 │   └── main.go
 ├── global/            # 全局实例用法示例
 │   └── main.go
+├── utils/             # 终端 UI 辅助函数示例
+│   ├── utils.go       # 辅助函数定义
+│   └── main.go        # 演示调用
 └── advanced/          # 高级用法示例（待添加）
     └── main.go
 ```
@@ -34,6 +37,17 @@ go run main.go
 cd global
 go run main.go
 ```
+
+### 终端 UI 辅助函数示例
+
+演示如何使用 color 库构建常用的终端 UI 组件（表格、日志、进度条等）。
+
+```bash
+cd utils
+go run .
+```
+
+> **注意**: 由于 utils 示例包含多个文件（utils.go 和 main.go），需要使用 `go run .` 而不是 `go run main.go`。
 
 ## 示例内容概览
 
@@ -59,6 +73,18 @@ go run main.go
 - 禁用/启用颜色
 - 获取全局实例进行高级操作
 - 实际应用场景（命令行工具输出）
+
+### utils/main.go & utils.go
+
+- 章节标题和分隔线
+- 日志级别打印（Info/Success/Warn/Error/Debug）
+- 表格输出（带表头、数据行、分隔线）
+- 列表输出（无序列表、有序列表）
+- 状态标签（运行中/已停止/警告/待处理）
+- 进度条（带动画效果）
+- 代码块和引用文本
+- 提示框（提示/警告/错误/成功）
+- 综合示例：系统监控面板
 
 ## 添加新示例
 
