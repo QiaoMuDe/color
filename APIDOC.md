@@ -103,7 +103,7 @@ fmt.Printf("这个 %s 太棒了！\n", info("包"))
 Windows 支持默认启用。所有 Print 函数都能按预期工作。 但是，仅对于 color.SprintXXX 函数，用户应该使用 fmt.FprintXXX 并将输出设置为 color.Output：
 
 ```go
-fmt.Fprintf(color.Output, "Windows 支持：%s", color.GreenString("通过"))
+fmt.Fprintf(color.Output, "Windows 支持：%s", color.SGreen("通过"))
 
 info := New(FgWhite, BgGreen).SprintFunc()
 fmt.Fprintf(color.Output, "这个 %s 太棒了！\n", info("包"))
@@ -194,13 +194,13 @@ Black 以黑色前景打印文本。 默认会在 format 末尾追加换行符�
 
 ---
 
-### BlackString
+### SBlack
 
 ```go
-func BlackString(format string, a ...interface{}) string
+func SBlack(format string, a ...interface{}) string
 ```
 
-BlackString 返回带有黑色前景的字符串。
+SBlack 返回带有黑色前景的字符串。
 
 **参数:**
 - `format`: 格式字符串
@@ -225,13 +225,13 @@ Blue 以蓝色前景打印文本。 默认会在 format 末尾追加换行符。
 
 ---
 
-### BlueString
+### SBlue
 
 ```go
-func BlueString(format string, a ...interface{}) string
+func SBlue(format string, a ...interface{}) string
 ```
 
-BlueString 返回带有蓝色前景的字符串。
+SBlue 返回带有蓝色前景的字符串。
 
 **参数:**
 - `format`: 格式字符串
@@ -256,13 +256,13 @@ Cyan 以青色前景打印文本。 默认会在 format 末尾追加换行符。
 
 ---
 
-### CyanString
+### SCyan
 
 ```go
-func CyanString(format string, a ...interface{}) string
+func SCyan(format string, a ...interface{}) string
 ```
 
-CyanString 返回带有青色前景的字符串。
+SCyan 返回带有青色前景的字符串。
 
 **参数:**
 - `format`: 格式字符串
@@ -287,13 +287,13 @@ Green 以绿色前景打印文本。 默认会在 format 末尾追加换行符�
 
 ---
 
-### GreenString
+### SGreen
 
 ```go
-func GreenString(format string, a ...interface{}) string
+func SGreen(format string, a ...interface{}) string
 ```
 
-GreenString 返回带有绿色前景的字符串。
+SGreen 返回带有绿色前景的字符串。
 
 **参数:**
 - `format`: 格式字符串
@@ -318,13 +318,13 @@ HiBlack 以高亮黑色前景打印文本。 默认会在 format 末尾追加换
 
 ---
 
-### HiBlackString
+### SHiBlack
 
 ```go
-func HiBlackString(format string, a ...interface{}) string
+func SHiBlack(format string, a ...interface{}) string
 ```
 
-HiBlackString 返回带有高亮黑色前景的字符串。
+SHiBlack 返回带有高亮黑色前景的字符串。
 
 **参数:**
 - `format`: 格式字符串
@@ -349,13 +349,13 @@ HiBlue 以高亮蓝色前景打印文本。 默认会在 format 末尾追加换�
 
 ---
 
-### HiBlueString
+### SHiBlue
 
 ```go
-func HiBlueString(format string, a ...interface{}) string
+func SHiBlue(format string, a ...interface{}) string
 ```
 
-HiBlueString 返回带有高亮蓝色前景的字符串。
+SHiBlue 返回带有高亮蓝色前景的字符串。
 
 **参数:**
 - `format`: 格式字符串
@@ -380,13 +380,13 @@ HiCyan 以高亮青色前景打印文本。 默认会在 format 末尾追加换�
 
 ---
 
-### HiCyanString
+### SHiCyan
 
 ```go
-func HiCyanString(format string, a ...interface{}) string
+func SHiCyan(format string, a ...interface{}) string
 ```
 
-HiCyanString 返回带有高亮青色前景的字符串。
+SHiCyan 返回带有高亮青色前景的字符串。
 
 **参数:**
 - `format`: 格式字符串
@@ -411,13 +411,13 @@ HiGreen 以高亮绿色前景打印文本。 默认会在 format 末尾追加换
 
 ---
 
-### HiGreenString
+### SHiGreen
 
 ```go
-func HiGreenString(format string, a ...interface{}) string
+func SHiGreen(format string, a ...interface{}) string
 ```
 
-HiGreenString 返回带有高亮绿色前景的字符串。
+SHiGreen 返回带有高亮绿色前景的字符串。
 
 **参数:**
 - `format`: 格式字符串
@@ -442,13 +442,13 @@ HiMagenta 以高亮洋红色前景打印文本。 默认会在 format 末尾追�
 
 ---
 
-### HiMagentaString
+### SHiMagenta
 
 ```go
-func HiMagentaString(format string, a ...interface{}) string
+func SHiMagenta(format string, a ...interface{}) string
 ```
 
-HiMagentaString 返回带有高亮洋红色前景的字符串。
+SHiMagenta 返回带有高亮洋红色前景的字符串。
 
 **参数:**
 - `format`: 格式字符串
@@ -473,13 +473,13 @@ HiRed 以高亮红色前景打印文本。 默认会在 format 末尾追加换�
 
 ---
 
-### HiRedString
+### SHiRed
 
 ```go
-func HiRedString(format string, a ...interface{}) string
+func SHiRed(format string, a ...interface{}) string
 ```
 
-HiRedString 返回带有高亮红色前景的字符串。
+SHiRed 返回带有高亮红色前景的字符串。
 
 **参数:**
 - `format`: 格式字符串
@@ -504,13 +504,13 @@ HiWhite 以高亮白色前景打印文本。 默认会在 format 末尾追加换
 
 ---
 
-### HiWhiteString
+### SHiWhite
 
 ```go
-func HiWhiteString(format string, a ...interface{}) string
+func SHiWhite(format string, a ...interface{}) string
 ```
 
-HiWhiteString 返回带有高亮白色前景的字符串。
+SHiWhite 返回带有高亮白色前景的字符串。
 
 **参数:**
 - `format`: 格式字符串
@@ -535,13 +535,13 @@ HiYellow 以高亮黄色前景打印文本。 默认会在 format 末尾追加�
 
 ---
 
-### HiYellowString
+### SHiYellow
 
 ```go
-func HiYellowString(format string, a ...interface{}) string
+func SHiYellow(format string, a ...interface{}) string
 ```
 
-HiYellowString 返回带有高亮黄色前景的字符串。
+SHiYellow 返回带有高亮黄色前景的字符串。
 
 **参数:**
 - `format`: 格式字符串
@@ -566,13 +566,13 @@ Magenta 以洋红色前景打印文本。 默认会在 format 末尾追加换行
 
 ---
 
-### MagentaString
+### SMagenta
 
 ```go
-func MagentaString(format string, a ...interface{}) string
+func SMagenta(format string, a ...interface{}) string
 ```
 
-MagentaString 返回带有洋红色前景的字符串。
+SMagenta 返回带有洋红色前景的字符串。
 
 **参数:**
 - `format`: 格式字符串
@@ -597,13 +597,13 @@ Red 以红色前景打印文本。 默认会在 format 末尾追加换行符。
 
 ---
 
-### RedString
+### SRed
 
 ```go
-func RedString(format string, a ...interface{}) string
+func SRed(format string, a ...interface{}) string
 ```
 
-RedString 返回带有红色前景的字符串。
+SRed 返回带有红色前景的字符串。
 
 **参数:**
 - `format`: 格式字符串
@@ -638,13 +638,13 @@ White 以白色前景打印文本。 默认会在 format 末尾追加换行符�
 
 ---
 
-### WhiteString
+### SWhite
 
 ```go
-func WhiteString(format string, a ...interface{}) string
+func SWhite(format string, a ...interface{}) string
 ```
 
-WhiteString 返回带有白色前景的字符串。
+SWhite 返回带有白色前景的字符串。
 
 **参数:**
 - `format`: 格式字符串
@@ -669,13 +669,13 @@ Yellow 以黄色前景打印文本。 默认会在 format 末尾追加换行符�
 
 ---
 
-### YellowString
+### SYellow
 
 ```go
-func YellowString(format string, a ...interface{}) string
+func SYellow(format string, a ...interface{}) string
 ```
 
-YellowString 返回带有黄色前景的字符串。
+SYellow 返回带有黄色前景的字符串。
 
 **参数:**
 - `format`: 格式字符串

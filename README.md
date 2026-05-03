@@ -111,7 +111,7 @@ func main() {
     color.Yellow("警告: %s", "磁盘空间不足")
     
     // 获取带颜色的字符串（不打印）
-    redText := color.RedString("红色文本")
+    redText := color.SRed("红色文本")
     println(redText)
 }
 ```
@@ -272,9 +272,9 @@ func main() {
 | `Green()` | 绿色打印 | `color.Green("text")` |
 | `Blue()` | 蓝色打印 | `color.Blue("text")` |
 | `Yellow()` | 黄色打印 | `color.Yellow("text")` |
-| `RedString()` | 返回红色字符串 | `s := color.RedString("text")` |
+| `SRed()` | 返回红色字符串 | `s := color.SRed("text")` |
 | `HiRed()` | 高亮红色打印 | `color.HiRed("text")` |
-| `HiRedString()` | 返回高亮红色字符串 | `s := color.HiRedString("text")` |
+| `SHiRed()` | 返回高亮红色字符串 | `s := color.SHiRed("text")` |
 
 > 完整列表：`Black/Red/Green/Yellow/Blue/Magenta/Cyan/White` 和对应的高亮版本 `HiBlack/HiRed/...`
 

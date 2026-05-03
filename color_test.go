@@ -369,71 +369,71 @@ func TestColorVisual(t *testing.T) {
 	// Fifth Visual Test
 	fmt.Println()
 
-	_, _ = fmt.Fprintln(Output, BlackString("black"))
-	_, _ = fmt.Fprintln(Output, RedString("red"))
-	_, _ = fmt.Fprintln(Output, GreenString("green"))
-	_, _ = fmt.Fprintln(Output, YellowString("yellow"))
-	_, _ = fmt.Fprintln(Output, BlueString("blue"))
-	_, _ = fmt.Fprintln(Output, MagentaString("magenta"))
-	_, _ = fmt.Fprintln(Output, CyanString("cyan"))
-	_, _ = fmt.Fprintln(Output, WhiteString("white"))
-	_, _ = fmt.Fprintln(Output, HiBlackString("hblack"))
-	_, _ = fmt.Fprintln(Output, HiRedString("hred"))
-	_, _ = fmt.Fprintln(Output, HiGreenString("hgreen"))
-	_, _ = fmt.Fprintln(Output, HiYellowString("hyellow"))
-	_, _ = fmt.Fprintln(Output, HiBlueString("hblue"))
-	_, _ = fmt.Fprintln(Output, HiMagentaString("hmagenta"))
-	_, _ = fmt.Fprintln(Output, HiCyanString("hcyan"))
-	_, _ = fmt.Fprintln(Output, HiWhiteString("hwhite"))
+	_, _ = fmt.Fprintln(Output, SBlack("black"))
+	_, _ = fmt.Fprintln(Output, SRed("red"))
+	_, _ = fmt.Fprintln(Output, SGreen("green"))
+	_, _ = fmt.Fprintln(Output, SYellow("yellow"))
+	_, _ = fmt.Fprintln(Output, SBlue("blue"))
+	_, _ = fmt.Fprintln(Output, SMagenta("magenta"))
+	_, _ = fmt.Fprintln(Output, SCyan("cyan"))
+	_, _ = fmt.Fprintln(Output, SWhite("white"))
+	_, _ = fmt.Fprintln(Output, SHiBlack("hblack"))
+	_, _ = fmt.Fprintln(Output, SHiRed("hred"))
+	_, _ = fmt.Fprintln(Output, SHiGreen("hgreen"))
+	_, _ = fmt.Fprintln(Output, SHiYellow("hyellow"))
+	_, _ = fmt.Fprintln(Output, SHiBlue("hblue"))
+	_, _ = fmt.Fprintln(Output, SHiMagenta("hmagenta"))
+	_, _ = fmt.Fprintln(Output, SHiCyan("hcyan"))
+	_, _ = fmt.Fprintln(Output, SHiWhite("hwhite"))
 }
 
 func TestNoFormat(t *testing.T) {
-	fmt.Printf("%s   %%s = ", BlackString("Black"))
+	fmt.Printf("%s   %%s = ", SBlack("Black"))
 	Black("%s")
 
-	fmt.Printf("%s     %%s = ", RedString("Red"))
+	fmt.Printf("%s     %%s = ", SRed("Red"))
 	Red("%s")
 
-	fmt.Printf("%s   %%s = ", GreenString("Green"))
+	fmt.Printf("%s   %%s = ", SGreen("Green"))
 	Green("%s")
 
-	fmt.Printf("%s  %%s = ", YellowString("Yellow"))
+	fmt.Printf("%s  %%s = ", SYellow("Yellow"))
 	Yellow("%s")
 
-	fmt.Printf("%s    %%s = ", BlueString("Blue"))
+	fmt.Printf("%s    %%s = ", SBlue("Blue"))
 	Blue("%s")
 
-	fmt.Printf("%s %%s = ", MagentaString("Magenta"))
+	fmt.Printf("%s %%s = ", SMagenta("Magenta"))
 	Magenta("%s")
 
-	fmt.Printf("%s    %%s = ", CyanString("Cyan"))
+	fmt.Printf("%s    %%s = ", SCyan("Cyan"))
 	Cyan("%s")
 
-	fmt.Printf("%s   %%s = ", WhiteString("White"))
+	fmt.Printf("%s   %%s = ", SWhite("White"))
 	White("%s")
 
-	fmt.Printf("%s   %%s = ", HiBlackString("HiBlack"))
+	fmt.Printf("%s   %%s = ", SHiBlack("HiBlack"))
 	HiBlack("%s")
 
-	fmt.Printf("%s     %%s = ", HiRedString("HiRed"))
+	fmt.Printf("%s     %%s = ", SHiRed("HiRed"))
 	HiRed("%s")
 
-	fmt.Printf("%s   %%s = ", HiGreenString("HiGreen"))
+	fmt.Printf("%s   %%s = ", SHiGreen("HiGreen"))
 	HiGreen("%s")
 
-	fmt.Printf("%s  %%s = ", HiYellowString("HiYellow"))
+	fmt.Printf("%s  %%s = ", SHiYellow("HiYellow"))
 	HiYellow("%s")
 
-	fmt.Printf("%s    %%s = ", HiBlueString("HiBlue"))
+	fmt.Printf("%s    %%s = ", SHiBlue("HiBlue"))
 	HiBlue("%s")
 
-	fmt.Printf("%s %%s = ", HiMagentaString("HiMagenta"))
+	fmt.Printf("%s %%s = ", SHiMagenta("HiMagenta"))
 	HiMagenta("%s")
 
-	fmt.Printf("%s    %%s = ", HiCyanString("HiCyan"))
+	fmt.Printf("%s    %%s = ", SHiCyan("HiCyan"))
 	HiCyan("%s")
 
-	fmt.Printf("%s   %%s = ", HiWhiteString("HiWhite"))
+	fmt.Printf("%s   %%s = ", SHiWhite("HiWhite"))
 	HiWhite("%s")
 }
 
@@ -444,22 +444,22 @@ func TestNoFormatString(t *testing.T) {
 		args   []interface{}
 		want   string
 	}{
-		{BlackString, "%s", nil, "\x1b[30m%s\x1b[0m"},
-		{RedString, "%s", nil, "\x1b[31m%s\x1b[0m"},
-		{GreenString, "%s", nil, "\x1b[32m%s\x1b[0m"},
-		{YellowString, "%s", nil, "\x1b[33m%s\x1b[0m"},
-		{BlueString, "%s", nil, "\x1b[34m%s\x1b[0m"},
-		{MagentaString, "%s", nil, "\x1b[35m%s\x1b[0m"},
-		{CyanString, "%s", nil, "\x1b[36m%s\x1b[0m"},
-		{WhiteString, "%s", nil, "\x1b[37m%s\x1b[0m"},
-		{HiBlackString, "%s", nil, "\x1b[90m%s\x1b[0m"},
-		{HiRedString, "%s", nil, "\x1b[91m%s\x1b[0m"},
-		{HiGreenString, "%s", nil, "\x1b[92m%s\x1b[0m"},
-		{HiYellowString, "%s", nil, "\x1b[93m%s\x1b[0m"},
-		{HiBlueString, "%s", nil, "\x1b[94m%s\x1b[0m"},
-		{HiMagentaString, "%s", nil, "\x1b[95m%s\x1b[0m"},
-		{HiCyanString, "%s", nil, "\x1b[96m%s\x1b[0m"},
-		{HiWhiteString, "%s", nil, "\x1b[97m%s\x1b[0m"},
+		{SBlack, "%s", nil, "\x1b[30m%s\x1b[0m"},
+		{SRed, "%s", nil, "\x1b[31m%s\x1b[0m"},
+		{SGreen, "%s", nil, "\x1b[32m%s\x1b[0m"},
+		{SYellow, "%s", nil, "\x1b[33m%s\x1b[0m"},
+		{SBlue, "%s", nil, "\x1b[34m%s\x1b[0m"},
+		{SMagenta, "%s", nil, "\x1b[35m%s\x1b[0m"},
+		{SCyan, "%s", nil, "\x1b[36m%s\x1b[0m"},
+		{SWhite, "%s", nil, "\x1b[37m%s\x1b[0m"},
+		{SHiBlack, "%s", nil, "\x1b[90m%s\x1b[0m"},
+		{SHiRed, "%s", nil, "\x1b[91m%s\x1b[0m"},
+		{SHiGreen, "%s", nil, "\x1b[92m%s\x1b[0m"},
+		{SHiYellow, "%s", nil, "\x1b[93m%s\x1b[0m"},
+		{SHiBlue, "%s", nil, "\x1b[94m%s\x1b[0m"},
+		{SHiMagenta, "%s", nil, "\x1b[95m%s\x1b[0m"},
+		{SHiCyan, "%s", nil, "\x1b[96m%s\x1b[0m"},
+		{SHiWhite, "%s", nil, "\x1b[97m%s\x1b[0m"},
 	}
 
 	for i, test := range tests {
@@ -586,7 +586,7 @@ func TestIssue206_1(t *testing.T) {
 
 	line := fmt.Sprintf("%s %s %s %s", "word1", underline("word2"), "word3", underline("word4"))
 
-	line = CyanString(line)
+	line = SCyan(line)
 
 	fmt.Println(line)
 
@@ -602,7 +602,7 @@ func TestIssue206_2(t *testing.T) {
 	underline := New(Underline).Sprint
 	bold := New(Bold).Sprint
 
-	line := fmt.Sprintf("%s %s", GreenString(underline("underlined regular green")), RedString(bold("bold red")))
+	line := fmt.Sprintf("%s %s", SGreen(underline("underlined regular green")), SRed(bold("bold red")))
 
 	fmt.Println(line)
 

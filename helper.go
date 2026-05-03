@@ -64,7 +64,7 @@ func Cyan(format string, a ...interface{}) { colorPrint(format, FgCyan, a...) }
 //   - a: 格式化参数
 func White(format string, a ...interface{}) { colorPrint(format, FgWhite, a...) }
 
-// BlackString 返回带有黑色前景的字符串。
+// SBlack 返回带有黑色前景的字符串。
 //
 // 参数:
 //   - format: 格式字符串
@@ -72,9 +72,9 @@ func White(format string, a ...interface{}) { colorPrint(format, FgWhite, a...) 
 //
 // 返回值:
 //   - string: 带有黑色前景的字符串
-func BlackString(format string, a ...interface{}) string { return colorString(format, FgBlack, a...) }
+func SBlack(format string, a ...interface{}) string { return colorString(format, FgBlack, a...) }
 
-// RedString 返回带有红色前景的字符串。
+// SRed 返回带有红色前景的字符串。
 //
 // 参数:
 //   - format: 格式字符串
@@ -82,9 +82,9 @@ func BlackString(format string, a ...interface{}) string { return colorString(fo
 //
 // 返回值:
 //   - string: 带有红色前景的字符串
-func RedString(format string, a ...interface{}) string { return colorString(format, FgRed, a...) }
+func SRed(format string, a ...interface{}) string { return colorString(format, FgRed, a...) }
 
-// GreenString 返回带有绿色前景的字符串。
+// SGreen 返回带有绿色前景的字符串。
 //
 // 参数:
 //   - format: 格式字符串
@@ -92,9 +92,9 @@ func RedString(format string, a ...interface{}) string { return colorString(form
 //
 // 返回值:
 //   - string: 带有绿色前景的字符串
-func GreenString(format string, a ...interface{}) string { return colorString(format, FgGreen, a...) }
+func SGreen(format string, a ...interface{}) string { return colorString(format, FgGreen, a...) }
 
-// YellowString 返回带有黄色前景的字符串。
+// SYellow 返回带有黄色前景的字符串。
 //
 // 参数:
 //   - format: 格式字符串
@@ -102,9 +102,9 @@ func GreenString(format string, a ...interface{}) string { return colorString(fo
 //
 // 返回值:
 //   - string: 带有黄色前景的字符串
-func YellowString(format string, a ...interface{}) string { return colorString(format, FgYellow, a...) }
+func SYellow(format string, a ...interface{}) string { return colorString(format, FgYellow, a...) }
 
-// BlueString 返回带有蓝色前景的字符串。
+// SBlue 返回带有蓝色前景的字符串。
 //
 // 参数:
 //   - format: 格式字符串
@@ -112,9 +112,9 @@ func YellowString(format string, a ...interface{}) string { return colorString(f
 //
 // 返回值:
 //   - string: 带有蓝色前景的字符串
-func BlueString(format string, a ...interface{}) string { return colorString(format, FgBlue, a...) }
+func SBlue(format string, a ...interface{}) string { return colorString(format, FgBlue, a...) }
 
-// MagentaString 返回带有洋红色前景的字符串。
+// SMagenta 返回带有洋红色前景的字符串。
 //
 // 参数:
 //   - format: 格式字符串
@@ -122,11 +122,11 @@ func BlueString(format string, a ...interface{}) string { return colorString(for
 //
 // 返回值:
 //   - string: 带有洋红色前景的字符串
-func MagentaString(format string, a ...interface{}) string {
+func SMagenta(format string, a ...interface{}) string {
 	return colorString(format, FgMagenta, a...)
 }
 
-// CyanString 返回带有青色前景的字符串。
+// SCyan 返回带有青色前景的字符串。
 //
 // 参数:
 //   - format: 格式字符串
@@ -134,9 +134,9 @@ func MagentaString(format string, a ...interface{}) string {
 //
 // 返回值:
 //   - string: 带有青色前景的字符串
-func CyanString(format string, a ...interface{}) string { return colorString(format, FgCyan, a...) }
+func SCyan(format string, a ...interface{}) string { return colorString(format, FgCyan, a...) }
 
-// WhiteString 返回带有白色前景的字符串。
+// SWhite 返回带有白色前景的字符串。
 //
 // 参数:
 //   - format: 格式字符串
@@ -144,7 +144,7 @@ func CyanString(format string, a ...interface{}) string { return colorString(for
 //
 // 返回值:
 //   - string: 带有白色前景的字符串
-func WhiteString(format string, a ...interface{}) string { return colorString(format, FgWhite, a...) }
+func SWhite(format string, a ...interface{}) string { return colorString(format, FgWhite, a...) }
 
 // HiBlack 以高亮黑色前景打印文本。
 // 默认会在 format 末尾追加换行符。
@@ -210,7 +210,7 @@ func HiCyan(format string, a ...interface{}) { colorPrint(format, FgHiCyan, a...
 //   - a: 格式化参数
 func HiWhite(format string, a ...interface{}) { colorPrint(format, FgHiWhite, a...) }
 
-// HiBlackString 返回带有高亮黑色前景的字符串。
+// SHiBlack 返回带有高亮黑色前景的字符串。
 //
 // 参数:
 //   - format: 格式字符串
@@ -218,11 +218,11 @@ func HiWhite(format string, a ...interface{}) { colorPrint(format, FgHiWhite, a.
 //
 // 返回值:
 //   - string: 带有高亮黑色前景的字符串
-func HiBlackString(format string, a ...interface{}) string {
+func SHiBlack(format string, a ...interface{}) string {
 	return colorString(format, FgHiBlack, a...)
 }
 
-// HiRedString 返回带有高亮红色前景的字符串。
+// SHiRed 返回带有高亮红色前景的字符串。
 //
 // 参数:
 //   - format: 格式字符串
@@ -230,9 +230,9 @@ func HiBlackString(format string, a ...interface{}) string {
 //
 // 返回值:
 //   - string: 带有高亮红色前景的字符串
-func HiRedString(format string, a ...interface{}) string { return colorString(format, FgHiRed, a...) }
+func SHiRed(format string, a ...interface{}) string { return colorString(format, FgHiRed, a...) }
 
-// HiGreenString 返回带有高亮绿色前景的字符串。
+// SHiGreen 返回带有高亮绿色前景的字符串。
 //
 // 参数:
 //   - format: 格式字符串
@@ -240,11 +240,11 @@ func HiRedString(format string, a ...interface{}) string { return colorString(fo
 //
 // 返回值:
 //   - string: 带有高亮绿色前景的字符串
-func HiGreenString(format string, a ...interface{}) string {
+func SHiGreen(format string, a ...interface{}) string {
 	return colorString(format, FgHiGreen, a...)
 }
 
-// HiYellowString 返回带有高亮黄色前景的字符串。
+// SHiYellow 返回带有高亮黄色前景的字符串。
 //
 // 参数:
 //   - format: 格式字符串
@@ -252,11 +252,11 @@ func HiGreenString(format string, a ...interface{}) string {
 //
 // 返回值:
 //   - string: 带有高亮黄色前景的字符串
-func HiYellowString(format string, a ...interface{}) string {
+func SHiYellow(format string, a ...interface{}) string {
 	return colorString(format, FgHiYellow, a...)
 }
 
-// HiBlueString 返回带有高亮蓝色前景的字符串。
+// SHiBlue 返回带有高亮蓝色前景的字符串。
 //
 // 参数:
 //   - format: 格式字符串
@@ -264,9 +264,9 @@ func HiYellowString(format string, a ...interface{}) string {
 //
 // 返回值:
 //   - string: 带有高亮蓝色前景的字符串
-func HiBlueString(format string, a ...interface{}) string { return colorString(format, FgHiBlue, a...) }
+func SHiBlue(format string, a ...interface{}) string { return colorString(format, FgHiBlue, a...) }
 
-// HiMagentaString 返回带有高亮洋红色前景的字符串。
+// SHiMagenta 返回带有高亮洋红色前景的字符串。
 //
 // 参数:
 //   - format: 格式字符串
@@ -274,11 +274,11 @@ func HiBlueString(format string, a ...interface{}) string { return colorString(f
 //
 // 返回值:
 //   - string: 带有高亮洋红色前景的字符串
-func HiMagentaString(format string, a ...interface{}) string {
+func SHiMagenta(format string, a ...interface{}) string {
 	return colorString(format, FgHiMagenta, a...)
 }
 
-// HiCyanString 返回带有高亮青色前景的字符串。
+// SHiCyan 返回带有高亮青色前景的字符串。
 //
 // 参数:
 //   - format: 格式字符串
@@ -286,9 +286,9 @@ func HiMagentaString(format string, a ...interface{}) string {
 //
 // 返回值:
 //   - string: 带有高亮青色前景的字符串
-func HiCyanString(format string, a ...interface{}) string { return colorString(format, FgHiCyan, a...) }
+func SHiCyan(format string, a ...interface{}) string { return colorString(format, FgHiCyan, a...) }
 
-// HiWhiteString 返回带有高亮白色前景的字符串。
+// SHiWhite 返回带有高亮白色前景的字符串。
 //
 // 参数:
 //   - format: 格式字符串
@@ -296,6 +296,6 @@ func HiCyanString(format string, a ...interface{}) string { return colorString(f
 //
 // 返回值:
 //   - string: 带有高亮白色前景的字符串
-func HiWhiteString(format string, a ...interface{}) string {
+func SHiWhite(format string, a ...interface{}) string {
 	return colorString(format, FgHiWhite, a...)
 }

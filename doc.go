@@ -80,7 +80,7 @@ Windows 支持默认启用。所有 Print 函数都能按预期工作。
 但是，仅对于 color.SprintXXX 函数，用户应该使用 fmt.FprintXXX
 并将输出设置为 color.Output：
 
-	fmt.Fprintf(color.Output, "Windows 支持：%s", color.GreenString("通过"))
+	fmt.Fprintf(color.Output, "Windows 支持：%s", color.SGreen("通过"))
 
 	info := New(FgWhite, BgGreen).SprintFunc()
 	fmt.Fprintf(color.Output, "这个 %s 太棒了！\n", info("包"))
