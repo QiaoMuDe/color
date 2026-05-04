@@ -2,6 +2,7 @@ package color
 
 import (
 	"fmt"
+	"os"
 	"strings"
 	"sync"
 )
@@ -44,36 +45,16 @@ func getCachedColor(p Attribute) *Color {
 	return c
 }
 
-// colorPrint 是便捷函数的底层实现，用于打印彩色文本。
-// 如果 format 不以换行符结尾，会自动追加换行符。
-//
-// 参数:
-//   - format: 格式字符串
-//   - p: 颜色属性
-//   - a: 格式化参数
-func colorPrint(format string, p Attribute, a ...interface{}) {
-	c := getCachedColor(p)
-
-	// 确保格式字符串以换行符结尾
-	format = ensureNewline(format)
-
-	if len(a) == 0 {
-		_, _ = c.Print(format)
-	} else {
-		_, _ = c.Printf(format, a...)
-	}
-}
-
 // colorString 是便捷函数的底层实现，用于返回彩色字符串。
 //
 // 参数:
-//   - format: 格式字符串
 //   - p: 颜色属性
+//   - format: 格式字符串
 //   - a: 格式化参数
 //
 // 返回值:
 //   - string: 格式化后的彩色字符串
-func colorString(format string, p Attribute, a ...interface{}) string {
+func colorString(p Attribute, format string, a ...interface{}) string {
 	c := getCachedColor(p)
 
 	if len(a) == 0 {
@@ -83,19 +64,15 @@ func colorString(format string, p Attribute, a ...interface{}) string {
 	return c.SprintfFunc()(format, a...)
 }
 
-// ensureNewline 确保字符串以换行符结尾。
-// 如果字符串不以 "\n" 结尾，则自动追加一个换行符。
+// colorPrint 是便捷函数的底层实现，用于打印彩色文本。
+// 内部调用 colorString 获取字符串后输出。
 //
 // 参数:
-//   - s: 原始字符串
-//
-// 返回值:
-//   - string: 确保以换行符结尾的字符串
-func ensureNewline(s string) string {
-	if !strings.HasSuffix(s, "\n") {
-		return s + "\n"
-	}
-	return s
+//   - p: 颜色属性
+//   - format: 格式字符串
+//   - a: 格式化参数
+func colorPrint(p Attribute, format string, a ...interface{}) {
+	_, _ = fmt.Fprint(os.Stdout, colorString(p, format, a...))
 }
 
 // sprintln 是一个辅助函数，用于使用 fmt.Sprintln 格式化字符串并去除末尾的换行符。

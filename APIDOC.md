@@ -11,20 +11,22 @@ Package color 是一个 ANSI 颜色包，用于向标准输出输出彩色或 SG
 使用简单且默认的辅助函数，配合预定义的前景色：
 
 ```go
+// 直接打印字符串（自动追加换行符）
 color.Cyan("以青色打印文本。")
-
-// 默认会自动追加换行符
-color.Blue("以蓝色打印 %s。", "文本")
-
-// 更多默认前景色..
 color.Red("我们有红色")
 color.Yellow("也有黄色！")
 color.Magenta("还有很多其他颜色 ..")
+
+// 使用格式化版本（不自动追加换行符，需手动添加）
+color.Bluef("以蓝色打印 %s。\n", "文本")
 
 // 高亮色
 color.HiGreen("亮绿色。")
 color.HiBlack("亮黑色就是灰色..")
 color.HiWhite("闪亮的白色！")
+
+// 格式化高亮色
+color.HiGreenf("亮绿色: %s\n", "信息")
 ```
 
 ## 自定义颜色组合
@@ -178,472 +180,78 @@ var (
 
 ---
 
+## 便捷函数
+
+包提供了大量便捷函数用于快速打印彩色文本。这些函数分为两类：
+
+### 包级便捷函数
+
+直接使用包名调用，无需创建 Color 对象：
+
+```go
+// 打印函数（自动追加换行符，仅接受字符串参数）
+color.Red("错误信息")
+color.Green("操作完成")
+color.Blue("提示信息")
+
+// 格式化打印函数（不自动追加换行符）
+color.Greenf("成功: %s\n", "操作完成")
+
+// 返回字符串函数（仅接受字符串参数）
+errMsg := color.SRed("错误")
+successMsg := color.SGreen("成功")
+
+// 格式化返回字符串函数
+errMsgf := color.SRedf("错误: %s", "详情")
+```
+
+**可用的颜色函数：**
+
+| 标准色 | 高亮色 | 说明 |
+|--------|--------|------|
+| `Black` / `SBlack` | `HiBlack` / `SHiBlack` | 黑色/高亮黑色 |
+| `Red` / `SRed` | `HiRed` / `SHiRed` | 红色/高亮红色 |
+| `Green` / `SGreen` | `HiGreen` / `SHiGreen` | 绿色/高亮绿色 |
+| `Yellow` / `SYellow` | `HiYellow` / `SHiYellow` | 黄色/高亮黄色 |
+| `Blue` / `SBlue` | `HiBlue` / `SHiBlue` | 蓝色/高亮蓝色 |
+| `Magenta` / `SMagenta` | `HiMagenta` / `SHiMagenta` | 洋红色/高亮洋红色 |
+| `Cyan` / `SCyan` | `HiCyan` / `SHiCyan` | 青色/高亮青色 |
+| `White` / `SWhite` | `HiWhite` / `SHiWhite` | 白色/高亮白色 |
+| `Gray` / `SGray` | - | 灰色（HiBlack 的别名） |
+
+**函数命名规则：**
+- `Xxx(message)` - 打印彩色文本并自动追加换行符（仅接受字符串参数）
+- `Xxxf(format, a...)` - 打印格式化彩色文本（不自动追加换行符）
+- `SXxx(message)` - 返回彩色字符串（仅接受字符串参数）
+- `SXxxf(format, a...)` - 返回格式化彩色字符串
+
+> 💡 **提示**：不带 `f` 后缀的方法只接受字符串参数，会自动追加换行符；带 `f` 后缀的方法支持格式化字符串，不自动追加换行符。
+
+### 全局实例方法
+
+通过 `color.G()` 或 `color.GetGlobal()` 获取全局实例，支持链式配置：
+
+```go
+// 使用默认配置
+color.G().Red("错误信息")
+color.G().SGreen("成功")
+
+// 自定义配置
+color.G().SetBold(true).SetUnderline(true).Red("粗体下划线红色")
+
+// 临时禁用颜色
+color.G().SetNoColor(true).Blue("这行不会显示颜色")
+```
+
+**全局实例特性：**
+- 支持样式配置（加粗、斜体、下划线等）
+- 支持自定义输出目标
+- 线程安全
+- 可动态启用/禁用颜色
+
+---
+
 ## 函数
-
-### Black
-
-```go
-func Black(format string, a ...interface{})
-```
-
-Black 以黑色前景打印文本。 默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-### SBlack
-
-```go
-func SBlack(format string, a ...interface{}) string
-```
-
-SBlack 返回带有黑色前景的字符串。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 带有黑色前景的字符串
-
----
-
-### Blue
-
-```go
-func Blue(format string, a ...interface{})
-```
-
-Blue 以蓝色前景打印文本。 默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-### SBlue
-
-```go
-func SBlue(format string, a ...interface{}) string
-```
-
-SBlue 返回带有蓝色前景的字符串。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 带有蓝色前景的字符串
-
----
-
-### Cyan
-
-```go
-func Cyan(format string, a ...interface{})
-```
-
-Cyan 以青色前景打印文本。 默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-### SCyan
-
-```go
-func SCyan(format string, a ...interface{}) string
-```
-
-SCyan 返回带有青色前景的字符串。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 带有青色前景的字符串
-
----
-
-### Green
-
-```go
-func Green(format string, a ...interface{})
-```
-
-Green 以绿色前景打印文本。 默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-### SGreen
-
-```go
-func SGreen(format string, a ...interface{}) string
-```
-
-SGreen 返回带有绿色前景的字符串。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 带有绿色前景的字符串
-
----
-
-### HiBlack
-
-```go
-func HiBlack(format string, a ...interface{})
-```
-
-HiBlack 以高亮黑色前景打印文本。 默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-### SHiBlack
-
-```go
-func SHiBlack(format string, a ...interface{}) string
-```
-
-SHiBlack 返回带有高亮黑色前景的字符串。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 带有高亮黑色前景的字符串
-
----
-
-### HiBlue
-
-```go
-func HiBlue(format string, a ...interface{})
-```
-
-HiBlue 以高亮蓝色前景打印文本。 默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-### SHiBlue
-
-```go
-func SHiBlue(format string, a ...interface{}) string
-```
-
-SHiBlue 返回带有高亮蓝色前景的字符串。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 带有高亮蓝色前景的字符串
-
----
-
-### HiCyan
-
-```go
-func HiCyan(format string, a ...interface{})
-```
-
-HiCyan 以高亮青色前景打印文本。 默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-### SHiCyan
-
-```go
-func SHiCyan(format string, a ...interface{}) string
-```
-
-SHiCyan 返回带有高亮青色前景的字符串。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 带有高亮青色前景的字符串
-
----
-
-### HiGreen
-
-```go
-func HiGreen(format string, a ...interface{})
-```
-
-HiGreen 以高亮绿色前景打印文本。 默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-### SHiGreen
-
-```go
-func SHiGreen(format string, a ...interface{}) string
-```
-
-SHiGreen 返回带有高亮绿色前景的字符串。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 带有高亮绿色前景的字符串
-
----
-
-### HiMagenta
-
-```go
-func HiMagenta(format string, a ...interface{})
-```
-
-HiMagenta 以高亮洋红色前景打印文本。 默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-### SHiMagenta
-
-```go
-func SHiMagenta(format string, a ...interface{}) string
-```
-
-SHiMagenta 返回带有高亮洋红色前景的字符串。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 带有高亮洋红色前景的字符串
-
----
-
-### HiRed
-
-```go
-func HiRed(format string, a ...interface{})
-```
-
-HiRed 以高亮红色前景打印文本。 默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-### SHiRed
-
-```go
-func SHiRed(format string, a ...interface{}) string
-```
-
-SHiRed 返回带有高亮红色前景的字符串。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 带有高亮红色前景的字符串
-
----
-
-### HiWhite
-
-```go
-func HiWhite(format string, a ...interface{})
-```
-
-HiWhite 以高亮白色前景打印文本。 默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-### SHiWhite
-
-```go
-func SHiWhite(format string, a ...interface{}) string
-```
-
-SHiWhite 返回带有高亮白色前景的字符串。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 带有高亮白色前景的字符串
-
----
-
-### Gray
-
-```go
-func Gray(format string, a ...interface{})
-```
-
-Gray 以灰色前景打印文本。灰色是高亮黑色的别名，在终端中显示为灰色。默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-### SGray
-
-```go
-func SGray(format string, a ...interface{}) string
-```
-
-SGray 返回带有灰色前景的字符串。灰色是高亮黑色的别名，在终端中显示为灰色。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 带有灰色前景的字符串
-
----
-
-### HiYellow
-
-```go
-func HiYellow(format string, a ...interface{})
-```
-
-HiYellow 以高亮黄色前景打印文本。 默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-### SHiYellow
-
-```go
-func SHiYellow(format string, a ...interface{}) string
-```
-
-SHiYellow 返回带有高亮黄色前景的字符串。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 带有高亮黄色前景的字符串
-
----
-
-### Magenta
-
-```go
-func Magenta(format string, a ...interface{})
-```
-
-Magenta 以洋红色前景打印文本。 默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-### SMagenta
-
-```go
-func SMagenta(format string, a ...interface{}) string
-```
-
-SMagenta 返回带有洋红色前景的字符串。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 带有洋红色前景的字符串
-
----
-
-### Red
-
-```go
-func Red(format string, a ...interface{})
-```
-
-Red 以红色前景打印文本。 默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-### SRed
-
-```go
-func SRed(format string, a ...interface{}) string
-```
-
-SRed 返回带有红色前景的字符串。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 带有红色前景的字符串
-
----
 
 ### Unset
 
@@ -652,68 +260,6 @@ func Unset()
 ```
 
 Unset 重置所有转义属性并清除输出。 通常在 Set() 之后调用。
-
----
-
-### White
-
-```go
-func White(format string, a ...interface{})
-```
-
-White 以白色前景打印文本。 默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-### SWhite
-
-```go
-func SWhite(format string, a ...interface{}) string
-```
-
-SWhite 返回带有白色前景的字符串。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 带有白色前景的字符串
-
----
-
-### Yellow
-
-```go
-func Yellow(format string, a ...interface{})
-```
-
-Yellow 以黄色前景打印文本。 默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-### SYellow
-
-```go
-func SYellow(format string, a ...interface{}) string
-```
-
-SYellow 返回带有黄色前景的字符串。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 带有黄色前景的字符串
 
 ---
 
@@ -1326,17 +872,6 @@ color.GetGlobal().Green("成功信息")
 color.GetGlobal().SetBold(true).SetUnderline(true)
 color.GetGlobal().Blue("带下划线的蓝色粗体文本")
 
-// 使用日志级别方法
-color.GetGlobal().Info("这是一条信息")
-color.GetGlobal().Success("操作成功")
-color.GetGlobal().Warning("警告信息")
-color.GetGlobal().Error("错误信息")
-
-// 使用终端前缀方法
-color.GetGlobal().Ok("操作完成")
-color.GetGlobal().Warn("需要注意")
-color.GetGlobal().Err("发生错误")
-
 // 获取带颜色的字符串（不打印）
 redText := color.GetGlobal().SRed("红色文本")
 ```
@@ -1440,805 +975,38 @@ ResetGlobal 重置全局实例到默认状态。这会重新创建全局实例�
 
 ### GlobalColor 方法
 
-#### SetConfig
+GlobalColor 提供以下配置方法，均支持链式调用：
+
+| 方法 | 说明 |
+|------|------|
+| `SetConfig(config)` | 设置样式配置（自动克隆） |
+| `GetConfig()` | 获取当前配置 |
+| `GetConfigClone()` | 获取配置的克隆副本 |
+| `SetOutput(w)` | 设置输出目标 |
+| `SetNoColor(bool)` | 启用/禁用颜色 |
+| `SetBold(bool)` | 启用/禁用加粗 |
+| `SetUnderline(bool)` | 启用/禁用下划线 |
+| `SetItalic(bool)` | 启用/禁用斜体 |
+| `SetBlink(bool)` | 启用/禁用闪烁 |
+| `SetFaint(bool)` | 启用/禁用暗淡 |
+| `SetCrossedOut(bool)` | 启用/禁用删除线 |
+
+**颜色方法：**
+
+与包级便捷函数类似，GlobalColor 提供相同命名的颜色方法：
 
 ```go
-func (g *GlobalColor) SetConfig(config *StyleConfig) *GlobalColor
+// 打印方法（自动追加换行符）
+g.Black("文本")
+g.Red("错误: %s", err)
+g.Green("成功")
+
+// 返回字符串方法
+str := g.SRed("红色文本")
+str := g.SGreen("绿色%s", "文本")
 ```
 
-SetConfig 设置样式配置。会自动克隆传入的配置，防止外部修改影响全局实例。如果传入 nil，则使用默认配置。
-
-**参数:**
-- `config`: 要设置的样式配置
-
-**返回值:**
-- `*GlobalColor`: 当前 GlobalColor 对象，支持链式调用
+支持的颜色与包级函数相同：Black, Red, Green, Yellow, Blue, Magenta, Cyan, White, Gray 及其高亮版本（HiXxx）和字符串返回版本（SXxx, SHiXxx）。
 
 ---
-
-#### GetConfig
-
-```go
-func (g *GlobalColor) GetConfig() *StyleConfig
-```
-
-GetConfig 获取当前样式配置。返回的是配置对象的指针，直接修改会影响全局实例。如果需要修改配置，建议使用 GetConfigClone() 或 SetConfig() 方法。
-
-**返回值:**
-- `*StyleConfig`: 当前样式配置
-
----
-
-#### GetConfigClone
-
-```go
-func (g *GlobalColor) GetConfigClone() *StyleConfig
-```
-
-GetConfigClone 获取当前样式配置的克隆。返回一个新的配置对象，修改它不会影响全局实例。适合用于基于当前配置创建新配置的场景。
-
-**返回值:**
-- `*StyleConfig`: 当前样式配置的克隆
-
----
-
-#### SetOutput
-
-```go
-func (g *GlobalColor) SetOutput(w io.Writer) *GlobalColor
-```
-
-SetOutput 设置输出目标。
-
-**参数:**
-- `w`: 输出写入器
-
-**返回值:**
-- `*GlobalColor`: 当前 GlobalColor 对象，支持链式调用
-
----
-
-#### SetNoColor
-
-```go
-func (g *GlobalColor) SetNoColor(noColor bool) *GlobalColor
-```
-
-SetNoColor 设置是否禁用颜色。当禁用颜色时，所有样式效果（加粗、下划线等）也会被禁用。
-
-**参数:**
-- `noColor`: true 表示禁用颜色，false 表示启用颜色
-
-**返回值:**
-- `*GlobalColor`: 当前 GlobalColor 对象，支持链式调用
-
----
-
-#### SetBold
-
-```go
-func (g *GlobalColor) SetBold(bold bool) *GlobalColor
-```
-
-SetBold 设置是否启用加粗。
-
-**参数:**
-- `bold`: true 表示启用加粗，false 表示禁用
-
-**返回值:**
-- `*GlobalColor`: 当前 GlobalColor 对象，支持链式调用
-
----
-
-#### SetUnderline
-
-```go
-func (g *GlobalColor) SetUnderline(underline bool) *GlobalColor
-```
-
-SetUnderline 设置是否启用下划线。
-
-**参数:**
-- `underline`: true 表示启用下划线，false 表示禁用
-
-**返回值:**
-- `*GlobalColor`: 当前 GlobalColor 对象，支持链式调用
-
----
-
-#### SetItalic
-
-```go
-func (g *GlobalColor) SetItalic(italic bool) *GlobalColor
-```
-
-SetItalic 设置是否启用斜体。
-
-**参数:**
-- `italic`: true 表示启用斜体，false 表示禁用
-
-**返回值:**
-- `*GlobalColor`: 当前 GlobalColor 对象，支持链式调用
-
----
-
-#### SetBlink
-
-```go
-func (g *GlobalColor) SetBlink(blink bool) *GlobalColor
-```
-
-SetBlink 设置是否启用闪烁。
-
-**参数:**
-- `blink`: true 表示启用闪烁，false 表示禁用
-
-**返回值:**
-- `*GlobalColor`: 当前 GlobalColor 对象，支持链式调用
-
----
-
-#### SetFaint
-
-```go
-func (g *GlobalColor) SetFaint(faint bool) *GlobalColor
-```
-
-SetFaint 设置是否启用暗淡效果。
-
-**参数:**
-- `faint`: true 表示启用暗淡效果，false 表示禁用
-
-**返回值:**
-- `*GlobalColor`: 当前 GlobalColor 对象，支持链式调用
-
----
-
-#### SetCrossedOut
-
-```go
-func (g *GlobalColor) SetCrossedOut(crossedOut bool) *GlobalColor
-```
-
-SetCrossedOut 设置是否启用删除线。
-
-**参数:**
-- `crossedOut`: true 表示启用删除线，false 表示禁用
-
-**返回值:**
-- `*GlobalColor`: 当前 GlobalColor 对象，支持链式调用
-
----
-
-### 颜色打印方法
-
-#### Black
-
-```go
-func (g *GlobalColor) Black(format string, a ...interface{})
-```
-
-Black 使用黑色样式打印文本。默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-#### Gray
-
-```go
-func (g *GlobalColor) Gray(format string, a ...interface{})
-```
-
-Gray 使用灰色样式打印文本。灰色是高亮黑色的别名，在终端中显示为灰色。默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-#### Red
-
-```go
-func (g *GlobalColor) Red(format string, a ...interface{})
-```
-
-Red 使用红色样式打印文本。默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-#### Green
-
-```go
-func (g *GlobalColor) Green(format string, a ...interface{})
-```
-
-Green 使用绿色样式打印文本。默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-#### Yellow
-
-```go
-func (g *GlobalColor) Yellow(format string, a ...interface{})
-```
-
-Yellow 使用黄色样式打印文本。默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-#### Blue
-
-```go
-func (g *GlobalColor) Blue(format string, a ...interface{})
-```
-
-Blue 使用蓝色样式打印文本。默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-#### Magenta
-
-```go
-func (g *GlobalColor) Magenta(format string, a ...interface{})
-```
-
-Magenta 使用洋红色样式打印文本。默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-#### Cyan
-
-```go
-func (g *GlobalColor) Cyan(format string, a ...interface{})
-```
-
-Cyan 使用青色样式打印文本。默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-#### White
-
-```go
-func (g *GlobalColor) White(format string, a ...interface{})
-```
-
-White 使用白色样式打印文本。默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-### 返回字符串的颜色方法
-
-#### SBlack
-
-```go
-func (g *GlobalColor) SBlack(format string, a ...interface{}) string
-```
-
-SBlack 返回黑色样式的字符串（不打印）。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 格式化后的字符串
-
----
-
-#### SRed
-
-```go
-func (g *GlobalColor) SRed(format string, a ...interface{}) string
-```
-
-SRed 返回红色样式的字符串（不打印）。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 格式化后的字符串
-
----
-
-#### SGreen
-
-```go
-func (g *GlobalColor) SGreen(format string, a ...interface{}) string
-```
-
-SGreen 返回绿色样式的字符串（不打印）。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 格式化后的字符串
-
----
-
-#### SYellow
-
-```go
-func (g *GlobalColor) SYellow(format string, a ...interface{}) string
-```
-
-SYellow 返回黄色样式的字符串（不打印）。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 格式化后的字符串
-
----
-
-#### SBlue
-
-```go
-func (g *GlobalColor) SBlue(format string, a ...interface{}) string
-```
-
-SBlue 返回蓝色样式的字符串（不打印）。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 格式化后的字符串
-
----
-
-#### SMagenta
-
-```go
-func (g *GlobalColor) SMagenta(format string, a ...interface{}) string
-```
-
-SMagenta 返回洋红色样式的字符串（不打印）。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 格式化后的字符串
-
----
-
-#### SCyan
-
-```go
-func (g *GlobalColor) SCyan(format string, a ...interface{}) string
-```
-
-SCyan 返回青色样式的字符串（不打印）。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 格式化后的字符串
-
----
-
-#### SWhite
-
-```go
-func (g *GlobalColor) SWhite(format string, a ...interface{}) string
-```
-
-SWhite 返回白色样式的字符串（不打印）。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 格式化后的字符串
-
----
-
-### 高亮颜色打印方法
-
-#### HiRed
-
-```go
-func (g *GlobalColor) HiRed(format string, a ...interface{})
-```
-
-HiRed 使用高亮红色样式打印文本。默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-#### HiGreen
-
-```go
-func (g *GlobalColor) HiGreen(format string, a ...interface{})
-```
-
-HiGreen 使用高亮绿色样式打印文本。默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-#### HiYellow
-
-```go
-func (g *GlobalColor) HiYellow(format string, a ...interface{})
-```
-
-HiYellow 使用高亮黄色样式打印文本。默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-#### HiBlue
-
-```go
-func (g *GlobalColor) HiBlue(format string, a ...interface{})
-```
-
-HiBlue 使用高亮蓝色样式打印文本。默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-#### HiMagenta
-
-```go
-func (g *GlobalColor) HiMagenta(format string, a ...interface{})
-```
-
-HiMagenta 使用高亮洋红色样式打印文本。默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-#### HiCyan
-
-```go
-func (g *GlobalColor) HiCyan(format string, a ...interface{})
-```
-
-HiCyan 使用高亮青色样式打印文本。默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-#### HiWhite
-
-```go
-func (g *GlobalColor) HiWhite(format string, a ...interface{})
-```
-
-HiWhite 使用高亮白色样式打印文本。默认会在 format 末尾追加换行符。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-### 返回字符串的高亮颜色方法
-
-#### SHiRed
-
-```go
-func (g *GlobalColor) SHiRed(format string, a ...interface{}) string
-```
-
-SHiRed 返回高亮红色样式的字符串（不打印）。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 格式化后的字符串
-
----
-
-#### SHiGreen
-
-```go
-func (g *GlobalColor) SHiGreen(format string, a ...interface{}) string
-```
-
-SHiGreen 返回高亮绿色样式的字符串（不打印）。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 格式化后的字符串
-
----
-
-#### SHiYellow
-
-```go
-func (g *GlobalColor) SHiYellow(format string, a ...interface{}) string
-```
-
-SHiYellow 返回高亮黄色样式的字符串（不打印）。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 格式化后的字符串
-
----
-
-#### SHiBlue
-
-```go
-func (g *GlobalColor) SHiBlue(format string, a ...interface{}) string
-```
-
-SHiBlue 返回高亮蓝色样式的字符串（不打印）。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 格式化后的字符串
-
----
-
-#### SHiMagenta
-
-```go
-func (g *GlobalColor) SHiMagenta(format string, a ...interface{}) string
-```
-
-SHiMagenta 返回高亮洋红色样式的字符串（不打印）。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 格式化后的字符串
-
----
-
-#### SHiCyan
-
-```go
-func (g *GlobalColor) SHiCyan(format string, a ...interface{}) string
-```
-
-SHiCyan 返回高亮青色样式的字符串（不打印）。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 格式化后的字符串
-
----
-
-#### SHiWhite
-
-```go
-func (g *GlobalColor) SHiWhite(format string, a ...interface{}) string
-```
-
-SHiWhite 返回高亮白色样式的字符串（不打印）。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 格式化后的字符串
-
----
-
-#### Gray
-
-```go
-func (g *GlobalColor) Gray(format string, a ...interface{})
-```
-
-Gray 使用灰色样式打印。灰色是高亮黑色的别名，在终端中显示为灰色。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-#### SGray
-
-```go
-func (g *GlobalColor) SGray(format string, a ...interface{}) string
-```
-
-SGray 返回灰色样式的字符串（不打印）。灰色是高亮黑色的别名，在终端中显示为灰色。
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
-**返回值:**
-- `string`: 格式化后的字符串
-
----
-
-### 日志级别方法
-
-#### Info
-
-```go
-func (g *GlobalColor) Info(format string, a ...interface{})
-```
-
-Info 以信息级别（青色）打印日志。格式: `[INFO] xxx`
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-#### Success
-
-```go
-func (g *GlobalColor) Success(format string, a ...interface{})
-```
-
-Success 以成功级别（绿色）打印日志。格式: `[SUCCESS] xxx`
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-#### Warning
-
-```go
-func (g *GlobalColor) Warning(format string, a ...interface{})
-```
-
-Warning 以警告级别（黄色）打印日志。格式: `[WARN] xxx`
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-#### Error
-
-```go
-func (g *GlobalColor) Error(format string, a ...interface{})
-```
-
-Error 以错误级别（红色）打印日志。格式: `[ERROR] xxx`
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-#### Debug
-
-```go
-func (g *GlobalColor) Debug(format string, a ...interface{})
-```
-
-Debug 以调试级别（洋红色）打印日志。格式: `[DEBUG] xxx`
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-### 终端提示信息前缀方法
-
-#### Ok
-
-```go
-func (g *GlobalColor) Ok(format string, a ...interface{})
-```
-
-Ok 以 OK 前缀（绿色）打印成功信息。格式: `ok: xxx`
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-#### Warn
-
-```go
-func (g *GlobalColor) Warn(format string, a ...interface{})
-```
-
-Warn 以 WARN 前缀（黄色）打印警告信息。格式: `warn: xxx`
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
-
----
-
-#### Err
-
-```go
-func (g *GlobalColor) Err(format string, a ...interface{})
-```
-
-Err 以 ERR 前缀（红色）打印错误信息。格式: `err: xxx`
-
-**参数:**
-- `format`: 格式字符串
-- `a`: 格式化参数
 

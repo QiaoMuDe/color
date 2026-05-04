@@ -439,31 +439,30 @@ func TestNoFormat(t *testing.T) {
 
 func TestNoFormatString(t *testing.T) {
 	tests := []struct {
-		f      func(string, ...interface{}) string
-		format string
-		args   []interface{}
-		want   string
+		f       func(string) string
+		message string
+		want    string
 	}{
-		{SBlack, "%s", nil, "\x1b[30m%s\x1b[0m"},
-		{SRed, "%s", nil, "\x1b[31m%s\x1b[0m"},
-		{SGreen, "%s", nil, "\x1b[32m%s\x1b[0m"},
-		{SYellow, "%s", nil, "\x1b[33m%s\x1b[0m"},
-		{SBlue, "%s", nil, "\x1b[34m%s\x1b[0m"},
-		{SMagenta, "%s", nil, "\x1b[35m%s\x1b[0m"},
-		{SCyan, "%s", nil, "\x1b[36m%s\x1b[0m"},
-		{SWhite, "%s", nil, "\x1b[37m%s\x1b[0m"},
-		{SHiBlack, "%s", nil, "\x1b[90m%s\x1b[0m"},
-		{SHiRed, "%s", nil, "\x1b[91m%s\x1b[0m"},
-		{SHiGreen, "%s", nil, "\x1b[92m%s\x1b[0m"},
-		{SHiYellow, "%s", nil, "\x1b[93m%s\x1b[0m"},
-		{SHiBlue, "%s", nil, "\x1b[94m%s\x1b[0m"},
-		{SHiMagenta, "%s", nil, "\x1b[95m%s\x1b[0m"},
-		{SHiCyan, "%s", nil, "\x1b[96m%s\x1b[0m"},
-		{SHiWhite, "%s", nil, "\x1b[97m%s\x1b[0m"},
+		{SBlack, "%s", "\x1b[30m%s\x1b[0m"},
+		{SRed, "%s", "\x1b[31m%s\x1b[0m"},
+		{SGreen, "%s", "\x1b[32m%s\x1b[0m"},
+		{SYellow, "%s", "\x1b[33m%s\x1b[0m"},
+		{SBlue, "%s", "\x1b[34m%s\x1b[0m"},
+		{SMagenta, "%s", "\x1b[35m%s\x1b[0m"},
+		{SCyan, "%s", "\x1b[36m%s\x1b[0m"},
+		{SWhite, "%s", "\x1b[37m%s\x1b[0m"},
+		{SHiBlack, "%s", "\x1b[90m%s\x1b[0m"},
+		{SHiRed, "%s", "\x1b[91m%s\x1b[0m"},
+		{SHiGreen, "%s", "\x1b[92m%s\x1b[0m"},
+		{SHiYellow, "%s", "\x1b[93m%s\x1b[0m"},
+		{SHiBlue, "%s", "\x1b[94m%s\x1b[0m"},
+		{SHiMagenta, "%s", "\x1b[95m%s\x1b[0m"},
+		{SHiCyan, "%s", "\x1b[96m%s\x1b[0m"},
+		{SHiWhite, "%s", "\x1b[97m%s\x1b[0m"},
 	}
 
 	for i, test := range tests {
-		s := test.f(test.format, test.args...)
+		s := test.f(test.message)
 
 		if s != test.want {
 			t.Errorf("[%d] want: %q, got: %q", i, test.want, s)

@@ -1,9 +1,5 @@
 # color 项目分析报告
 
-> 分析日期：2026-05-03  
-> 更新日期：2026-05-03  
-> 分析工具：Trae IDE + Kimi-K2.5
-
 ---
 
 ## 一、目录结构梳理
@@ -104,13 +100,23 @@ color/
 
 #### 2.2.4 helper.go - 便捷函数
 
-**核心功能**：提供32个预定义颜色的快速调用函数
+**核心功能**：提供64个预定义颜色的快速调用函数（由 gen/helper_gen.go 自动生成）
 
 **包含内容**：
-- 8个标准颜色打印函数：`Black()`、`Red()`...`White()`
-- 8个标准颜色字符串函数：`SBlack()`...`SWhite()`（返回字符串）
+- 8个标准颜色打印函数：`Black()`、`Red()`...`White()`（接受字符串参数，自动追加换行符）
+- 8个标准颜色格式化打印函数：`Blackf()`、`Redf()`...`Whitef()`（接受格式化字符串）
+- 8个标准颜色字符串函数：`SBlack()`...`SWhite()`（接受字符串参数，返回字符串）
+- 8个标准颜色格式化字符串函数：`SBlackf()`...`SWhitef()`（返回格式化字符串）
 - 8个高亮颜色打印函数：`HiBlack()`...`HiWhite()`
-- 8个高亮颜色字符串函数：`SHiBlack()`...`SHiWhite()`（返回字符串）
+- 8个高亮颜色格式化打印函数：`HiBlackf()`...`HiWhitef()`
+- 8个高亮颜色字符串函数：`SHiBlack()`...`SHiWhite()`
+- 8个高亮颜色格式化字符串函数：`SHiBlackf()`...`SHiWhitef()`
+
+**函数命名规则**：
+- `Xxx(message)` - 打印彩色文本并自动追加换行符（仅接受字符串参数）
+- `Xxxf(format, a...)` - 打印格式化彩色文本（不自动追加换行符）
+- `SXxx(message)` - 返回彩色字符串（仅接受字符串参数）
+- `SXxxf(format, a...)` - 返回格式化彩色字符串
 
 **代码统计**：约302行
 
@@ -126,21 +132,18 @@ color/
 
 #### 2.2.6 global.go - 全局实例支持
 
-**核心功能**：提供线程安全的全局颜色实例，支持独立配置和样式管理
+**核心功能**：提供线程安全的全局颜色实例，支持独立配置和样式管理（由 gen/global_gen.go 自动生成颜色方法）
 
 **包含内容**：
 - `GlobalColor` 结构体定义（config、color、mu字段）
 - `StyleConfig` 结构体定义（NoColor、Bold、Underline等样式配置）
 - 配置方法：`SetConfig()`、`GetConfig()`、`GetConfigClone()`、`SetNoColor()`、`SetBold()`等
-- 颜色快捷方法：`Red()`、`Green()`、`Blue()`等8个标准色
-- 字符串方法：`SRed()`、`SGreen()`等8个返回字符串的颜色方法
-- 高亮颜色方法：`HiRed()`、`HiGreen()`等7个高亮色
-- 高亮字符串方法：`SHiRed()`、`SHiGreen()`等7个返回字符串的高亮方法
-- 日志级别方法：`Info()`、`Success()`、`Warning()`、`Error()`、`Debug()`
-- 终端前缀方法：`Ok()`、`Warn()`、`Err()`
-- 单例模式：`GetGlobal()`、`ResetGlobal()`、`initGlobal()`
+- 颜色快捷方法：`Red()`、`Green()`、`Blue()`等16个标准色（含f后缀格式化版本）
+- 字符串方法：`SRed()`、`SGreen()`等16个返回字符串的颜色方法（含f后缀格式化版本）
+- 高亮颜色方法：`HiRed()`、`HiGreen()`等16个高亮色（含f后缀格式化版本）
+- 单例模式：`GetGlobal()`、`G()`、`ResetGlobal()`、`initGlobal()`
 
-**代码统计**：约520行
+**代码统计**：约446行
 
 **特点**：
 - 线程安全：使用 `sync.RWMutex` 保证并发安全
@@ -148,6 +151,7 @@ color/
 - 对象复用：内部复用单个 `Color` 对象，避免频繁创建
 - 链式调用：配置方法支持链式调用
 - 默认行为：默认启用加粗样式，自动继承全局 `NoColor` 设置
+- 代码生成：颜色方法通过 gen/global_gen.go 自动生成
 
 #### 2.2.7 color_windows.go - Windows平台适配
 
@@ -381,6 +385,8 @@ func getCachedColor(p Attribute) *Color {
 | 全局实例 | 新增 global.go | 提供线程安全的单例模式 |
 | API命名 | XxxString→SXxx | 符合标准库命名惯例 |
 | 管道检测 | 自动检测终端 | 管道输出时自动禁用颜色 |
+| 代码生成 | 添加 gen/ 目录 | 自动生成重复代码，减少维护成本 |
+| API重构 | 区分格式化/非格式化方法 | 不带f后缀自动换行，带f后缀支持格式化 |
 
 ### 7.3 关键记忆点
 
@@ -389,13 +395,15 @@ func getCachedColor(p Attribute) *Color {
   - `attribute.go` - 所有颜色常量定义
   - `color.go` - Color结构体和核心API
   - `output.go` - 全局配置和终端检测
-  - `helper.go` - 32个便捷函数
+  - `helper.go` - 64个便捷函数（由 gen/helper_gen.go 自动生成）
   - `utils.go` - 缓存和辅助函数
   - `global.go` - 全局实例支持（GlobalColor、StyleConfig）
+  - `global_methods.go` - 全局实例颜色方法（由 gen/global_gen.go 自动生成）
+  - `gen/` - 代码生成工具目录
 - **使用方式**：
-  - 便捷函数：`color.Red("text")`
+  - 便捷函数：`color.Red("text")` / `color.Redf("format: %s", val)`
   - 链式API：`color.New(color.FgRed).Add(color.Bold).Print("text")`
-  - 全局实例：`color.GetGlobal().Red("text")`
+  - 全局实例：`color.G().Red("text")` / `color.G().Redf("format: %s", val)`
 - **缓存机制**：`utils.go`中的`colorsCache`缓存单属性Color对象
 - **全局实例**：`global.go`提供线程安全的单例模式，支持配置克隆和对象复用
 - **平台适配**：`color_windows.go`的`init()`启用Windows VT处理
@@ -418,7 +426,8 @@ MIT License - 允许自由使用、修改和分发
 | 2026-05-03 | v2.0 | 更新：代码拆分、注释规范化、错误处理修复 |
 | 2026-05-03 | v3.0 | 更新：新增全局实例支持、API命名规范、管道自动检测 |
 | 2026-05-03 | v3.1 | 更新：RGB参数验证（自动截断到0-255） |
+| 2026-05-04 | v4.0 | 更新：API重构，添加代码生成工具，区分格式化/非格式化方法 |
 
 ---
 
-> **报告状态**：已更新项目记忆，反映全局实例支持和API命名规范后的最新状态
+> **报告状态**：已更新项目记忆，反映代码生成工具和API重构后的最新状态

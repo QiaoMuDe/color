@@ -42,10 +42,16 @@ description: |
 | 场景 | 推荐 API | 示例 |
 |------|----------|------|
 | 简单打印一行彩色文字 | 便捷函数 | `color.Red("错误信息")` |
+| 格式化打印 | 带 f 后缀函数 | `color.Redf("错误: %s", err)` |
 | 组合多种样式 | 链式调用 | `color.New(color.FgRed, color.Bold).Println(...)` |
 | 需要返回字符串 | S 前缀函数 | `str := color.SRed("红色文字")` |
+| 格式化返回字符串 | 带 f 后缀 S 函数 | `str := color.SRedf("错误: %s", err)` |
 | 频繁使用相同样式 | 全局实例 | `c := color.G(); c.Red(...)` |
 | 自定义 RGB 颜色 | RGB 函数 | `color.RGB(255, 128, 0).Println(...)` |
+
+**重要区别**：
+- 不带 `f` 后缀的方法（如 `Red()`）：只接受字符串，自动追加换行符
+- 带 `f` 后缀的方法（如 `Redf()`）：支持格式化字符串，不自动追加换行符
 
 ### 3. 生成代码
 
@@ -70,13 +76,21 @@ package main
 import "gitee.com/MM-Q/color"
 
 func main() {
-    // 便捷函数 - 最简单的方式
+    // 便捷函数 - 最简单的方式（自动追加换行符）
     color.Red("这是红色文字")
     color.Green("这是绿色文字")
     color.Blue("这是蓝色文字")
     
-    // 格式化输出
-    color.Yellow("警告: %s", "磁盘空间不足")
+    // 格式化输出（不自动追加换行符，需手动添加）
+    color.Yellowf("警告: %s\n", "磁盘空间不足")
+    
+    // 返回字符串（不打印）
+    redStr := color.SRed("红色文字")
+    fmt.Println(redStr)
+    
+    // 格式化返回字符串
+    errStr := color.SRedf("错误: %s", "连接失败")
+    fmt.Println(errStr)
 }
 ```
 
@@ -107,18 +121,22 @@ package main
 import "gitee.com/MM-Q/color"
 
 func main() {
-    // 获取全局实例（默认白色加粗）
+    // 获取全局实例（默认启用加粗）
     c := color.G()
     
-    // 使用快捷方法
+    // 使用快捷方法（自动追加换行符）
     c.Red("红色文字")
     c.Green("绿色文字")
     
-    // 使用日志级别方法
-    c.Info("信息日志")
-    c.Success("成功日志")
-    c.Warn("警告日志")
-    c.Error("错误日志")
+    // 使用格式化方法（不自动追加换行符）
+    c.Bluef("蓝色: %s\n", "信息")
+    
+    // 返回字符串
+    str := c.SRed("红色字符串")
+    fmt.Println(str)
+    
+    // 链式配置
+    c.SetBold(true).SetUnderline(true).Red("粗体下划线红色")
 }
 ```
 
@@ -166,13 +184,13 @@ func printSection(title string) {
 func printLog(level, message string) {
     switch level {
     case "INFO":
-        color.Cyan("[INFO]  %s", message)
+        color.Cyanf("[INFO]  %s\n", message)
     case "WARN":
-        color.Yellow("[WARN]  %s", message)
+        color.Yellowf("[WARN]  %s\n", message)
     case "ERROR":
-        color.Red("[ERROR] %s", message)
+        color.Redf("[ERROR] %s\n", message)
     case "SUCCESS":
-        color.Green("[OK]    %s", message)
+        color.Greenf("[OK]    %s\n", message)
     }
 }
 
@@ -225,14 +243,19 @@ A: 主要变化：
 - `GreenString()` → `SGreen()`
 - 其他类似
 - 新增全局实例 `color.G()`
+- **重要**：API 使用方式变化
+  - 原库：`Red("text %s", arg)` 支持格式化
+  - 本库：`Red("text")` 只接受字符串，`Redf("text %s", arg)` 支持格式化
 
 ## 最佳实践
 
-1. **简单场景用便捷函数**：`color.Red()`, `color.Green()` 等
-2. **复杂样式用链式调用**：`color.New().Add().Print()`
-3. **需要字符串用 S 前缀**：`color.SRed()`, `color.SGreen()`
-4. **频繁使用用全局实例**：`c := color.G()`
-5. **自定义颜色用 RGB**：`color.RGB(r, g, b)`
+1. **简单场景用便捷函数**：`color.Red()`, `color.Green()` 等（自动追加换行符）
+2. **格式化输出用 f 后缀**：`color.Redf()`, `color.Greenf()` 等（不自动追加换行符）
+3. **复杂样式用链式调用**：`color.New().Add().Print()`
+4. **需要字符串用 S 前缀**：`color.SRed()`, `color.SGreen()`（不带f后缀）或 `color.SRedf()`, `color.SGreenf()`（带f后缀）
+5. **频繁使用用全局实例**：`c := color.G()`
+6. **自定义颜色用 RGB**：`color.RGB(r, g, b)`
+7. **灰色文字**：`color.Gray()` 或 `color.SGray()`（`FgHiBlack` 的别名）
 
 ## 可用颜色常量
 
@@ -241,6 +264,9 @@ A: 主要变化：
 
 ### 高亮前景色
 `FgHiBlack`, `FgHiRed`, `FgHiGreen`, `FgHiYellow`, `FgHiBlue`, `FgHiMagenta`, `FgHiCyan`, `FgHiWhite`
+
+### 灰色（别名）
+`FgGray`（`FgHiBlack` 的别名）, `BgGray`（`BgHiBlack` 的别名）
 
 ### 标准背景色
 `BgBlack`, `BgRed`, `BgGreen`, `BgYellow`, `BgBlue`, `BgMagenta`, `BgCyan`, `BgWhite`

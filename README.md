@@ -16,7 +16,7 @@
 
 `color` 是一个轻量级的 Go 语言库，用于在终端中输出彩色文本。它提供了简单易用的 API，支持 ANSI 颜色代码、256色、RGB真彩色，以及多种文本样式（加粗、斜体、下划线等）。
 
-> 📌 **项目来源**: 本项目基于 [github.com/fatih/color](https://github.com/fatih/color) (v1.19.0) 进行二次开发和改造，添加了完整的中文注释、代码模块化拆分、全局实例支持、以及更详细的文档说明。感谢 [Fatih Arslan](https://github.com/fatih) 和原项目的所有贡献者！
+> 📌 **项目来源**: 本项目基于 [github.com/fatih/color](https://github.com/fatih/color) (v1.19.0) 进行二次开发和改造。感谢 [Fatih Arslan](https://github.com/fatih) 和原项目的所有贡献者！
 
 ### ✨ 为什么选择 color？
 
@@ -81,19 +81,19 @@ import (
 )
 
 func main() {
-    // 打印红色文本
+    // 打印红色文本（自动追加换行符）
     color.Red("这是一条红色消息")
     
-    // 打印绿色文本
+    // 打印绿色文本（自动追加换行符）
     color.Green("这是一条绿色消息")
     
-    // 打印蓝色文本
+    // 打印蓝色文本（自动追加换行符）
     color.Blue("这是一条蓝色消息")
     
-    // 使用格式化字符串
-    color.Yellow("警告: %s", "磁盘空间不足")
+    // 使用格式化字符串（不自动追加换行符）
+    color.Yellowf("警告: %s\n", "磁盘空间不足")
     
-    // 获取带颜色的字符串（不打印）
+    // 获取带颜色的字符串（不打印，不自动追加换行符）
     redText := color.SRed("红色文本")
     println(redText)
 }
@@ -109,13 +109,16 @@ import (
 )
 
 func main() {
-    // 高亮颜色比普通颜色更明亮
+    // 高亮颜色比普通颜色更明亮（自动追加换行符）
     color.HiRed("高亮红色")
     color.HiGreen("高亮绿色")
     color.HiYellow("高亮黄色")
     color.HiBlue("高亮蓝色")
     color.HiCyan("高亮青色")
     color.HiMagenta("高亮洋红色")
+    
+    // 使用格式化版本（不自动追加换行符）
+    color.HiRedf("高亮红色: %s\n", "信息")
 }
 ```
 
@@ -249,19 +252,24 @@ func main() {
 
 ### 便捷函数
 
+**函数命名规则：**
+- `Xxx(message)` - 打印彩色文本并自动追加换行符（仅接受字符串）
+- `Xxxf(format, a...)` - 打印格式化彩色文本（不自动追加换行符）
+- `SXxx(message)` - 返回彩色字符串（仅接受字符串）
+- `SXxxf(format, a...)` - 返回格式化彩色字符串
+
 | 函数 | 描述 | 示例 |
 |------|------|------|
-| `Red()` | 红色打印 | `color.Red("text")` |
-| `Green()` | 绿色打印 | `color.Green("text")` |
-| `Blue()` | 蓝色打印 | `color.Blue("text")` |
-| `Yellow()` | 黄色打印 | `color.Yellow("text")` |
+| `Red()` | 红色打印（自动换行） | `color.Red("text")` |
+| `Redf()` | 红色格式化打印 | `color.Redf("text: %s", "value")` |
 | `SRed()` | 返回红色字符串 | `s := color.SRed("text")` |
+| `SRedf()` | 返回格式化红色字符串 | `s := color.SRedf("text: %s", "value")` |
 | `HiRed()` | 高亮红色打印 | `color.HiRed("text")` |
-| `SHiRed()` | 返回高亮红色字符串 | `s := color.SHiRed("text")` |
+| `HiRedf()` | 高亮红色格式化打印 | `color.HiRedf("text: %s", "value")` |
 | `Gray()` | 灰色打印 | `color.Gray("text")` |
-| `SGray()` | 返回灰色字符串 | `s := color.SGray("text")` |
+| `Grayf()` | 灰色格式化打印 | `color.Grayf("text: %s", "value")` |
 
-> 完整列表：`Black/Red/Green/Yellow/Blue/Magenta/Cyan/White` 和对应的高亮版本 `HiBlack/HiRed/...`，以及灰色 `Gray/SGray`
+> 完整列表：`Black/Red/Green/Yellow/Blue/Magenta/Cyan/White` 和对应的高亮版本 `HiBlack/HiRed/...`，以及灰色 `Gray/SGray`，每个都有 `f` 后缀的格式化版本和 `S` 前缀的字符串返回版本。
 
 ### Color 对象方法
 
@@ -516,7 +524,5 @@ redStr := color.SRed("error: %s", errMsg)
 </div>
 
 ---
-
-> 📝 **注意**: 本文档最后更新于 2026-05-03
-> 
+ 
 > 🔗 **项目地址**: [https://gitee.com/MM-Q/color.git](https://gitee.com/MM-Q/color.git)
