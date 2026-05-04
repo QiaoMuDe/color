@@ -397,10 +397,15 @@ color/
 ├── 🎯 color.go            # 核心类型和方法
 ├── 🎨 attribute.go        # 颜色常量定义
 ├── ⚙️ output.go           # 输出控制
-├── 🚀 helper.go           # 便捷函数
+├── 🚀 helper.go           # 便捷函数（代码生成）
 ├── 🔧 utils.go            # 内部工具
-├── 🖥️ color_windows.go    # Windows平台适配
+├── 🌐 global.go           # 全局实例管理
+├── � global_methods.go   # 全局实例方法（代码生成）
+├── �🖥️ color_windows.go    # Windows平台适配
 ├── 🧪 color_test.go       # 单元测试
+├── 📁 gen/                # 代码生成工具
+│   ├── helper_gen.go      # helper.go 生成器
+│   └── global_gen.go      # global_methods.go 生成器
 ├── 📦 go.mod              # 模块定义
 ├── 🔒 go.sum              # 依赖校验
 ├── 📜 LICENSE             # MIT许可证
@@ -492,12 +497,28 @@ copies or substantial portions of the Software.
 **迁移示例：**
 
 ```go
-// 原项目代码
+// 原项目代码（支持格式化）
 redStr := color.RedString("error: %s", errMsg)
 
-// 迁移后的代码
-redStr := color.SRed("error: %s", errMsg)
+// 迁移后的代码（使用带 f 后缀的方法支持格式化）
+redStr := color.SRedf("error: %s", errMsg)
+
+// 如果不需要格式化，直接使用字符串
+redStr := color.SRed("error message")
 ```
+
+#### 方法命名规则
+
+本项目的方法命名遵循以下规则：
+
+| 方法后缀 | 功能 | 示例 |
+|---------|------|------|
+| 无后缀 | 直接打印字符串 | `color.Red("text")` |
+| `f` 后缀 | 支持格式化打印 | `color.Redf("value: %d", 42)` |
+| `S` 前缀 | 返回字符串 | `color.SRed("text")` |
+| `S` + `f` | 返回格式化字符串 | `color.SRedf("value: %d", 42)` |
+
+**注意：** 只有带 `f` 后缀的方法支持格式化参数（如 `%s`, `%d` 等），不带后缀的方法只接受字符串参数。
 
 ### 贡献指南
 
