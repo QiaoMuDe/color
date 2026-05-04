@@ -68,7 +68,7 @@ func main() {
 
 	c.Red("这段文字纯文本（颜色、加粗、下划线、斜体都被禁用）")
 	c.Green("这段文字纯文本（所有样式效果都被禁用）")
-	c.Error("错误信息也是纯文本")
+	c.Red("错误信息也是纯文本")
 
 	println()
 
@@ -131,7 +131,7 @@ func main() {
 	})
 
 	c.Red("这条输出到 stderr（默认加粗红色）")
-	c.Error("错误信息也输出到 stderr")
+	c.Redf("错误信息也输出到 stderr\n")
 
 	// 恢复输出到 stdout
 	c.SetOutput(os.Stdout)
@@ -146,11 +146,11 @@ func main() {
 	// 重置为默认配置
 	c.SetConfig(&color.StyleConfig{})
 
-	c.Info("系统启动成功")
-	c.Success("数据库连接成功")
-	c.Warn("内存使用率超过 80%")
-	c.Error("无法连接到服务器")
-	c.Debug("正在处理请求 #12345")
+	c.Cyan("[INFO] 系统启动成功")
+	c.Green("[OK] 数据库连接成功")
+	c.Yellow("[WARN] 内存使用率超过 80%")
+	c.Red("[ERROR] 无法连接到服务器")
+	c.Magenta("[DEBUG] 正在处理请求 #12345")
 
 	println()
 
@@ -179,23 +179,23 @@ func main() {
 	c.Cyan("========================================")
 	println()
 
-	c.Info("正在检查环境...")
-	c.Success("✓ Go 版本: 1.25.0")
-	c.Success("✓ 配置文件: 已加载")
+	c.Cyan("[INFO] 正在检查环境...")
+	c.Green("[OK] ✓ Go 版本: 1.25.0")
+	c.Green("[OK] ✓ 配置文件: 已加载")
 
 	// 添加下划线用于警告
 	c.SetUnderline(true)
-	c.Warn("⚠ 配置文件使用了默认设置")
+	c.Yellow("[WARN] ⚠ 配置文件使用了默认设置")
 
 	// 恢复默认
 	c.SetConfig(&color.StyleConfig{})
-	c.Info("正在执行任务...")
-	c.Debug("处理文件: config.yaml")
-	c.Success("任务完成！处理了 2 个文件")
+	c.Cyan("[INFO] 正在执行任务...")
+	c.Magenta("[DEBUG] 处理文件: config.yaml")
+	c.Green("[OK] 任务完成！处理了 2 个文件")
 
 	println()
 
-	c.Error("发现 1 个错误:")
+	c.Red("[ERROR] 发现 1 个错误:")
 	c.Red("  - 无法读取 secret.key: 权限 denied")
 
 	println()
@@ -249,35 +249,35 @@ func main() {
 	// 重置配置
 	c.SetConfig(&color.StyleConfig{})
 
-	// 使用 ok/warn/err 前缀
-	c.Ok("服务启动成功")
-	c.Ok("配置文件加载完成")
-	c.Warn("内存使用率超过 80%")
-	c.Err("数据库连接失败")
+	// 使用颜色模拟 ok/warn/err 前缀效果
+	c.Green("[OK] 服务启动成功")
+	c.Green("[OK] 配置文件加载完成")
+	c.Yellow("[WARN] 内存使用率超过 80%")
+	c.Red("[ERR] 数据库连接失败")
 
 	println()
 
 	// 实际应用场景：命令执行流程
 	printSection("14. 实际应用场景 - 命令执行流程")
 
-	c.Ok("初始化环境")
-	c.Ok("加载配置文件")
-	c.Ok("连接数据库")
-	c.Warn("发现 3 个可更新包")
-	c.Err("无法连接到远程服务器")
-	c.Ok("使用本地缓存")
+	c.Green("[OK] 初始化环境")
+	c.Green("[OK] 加载配置文件")
+	c.Green("[OK] 连接数据库")
+	c.Yellow("[WARN] 发现 3 个可更新包")
+	c.Red("[ERR] 无法连接到远程服务器")
+	c.Green("[OK] 使用本地缓存")
 
 	println()
 
 	// 测试场景
 	printSection("15. 测试场景")
 
-	c.Ok("TestAdd: 通过 (5ms)")
-	c.Ok("TestSub: 通过 (3ms)")
-	c.Warn("TestComplex: 跳过 (需要外部服务)")
-	c.Err("TestDivide: 失败 - 除零错误")
-	c.Warn("覆盖率: 87.5%")
-	c.Ok("测试执行完成")
+	c.Green("[OK] TestAdd: 通过 (5ms)")
+	c.Green("[OK] TestSub: 通过 (3ms)")
+	c.Yellow("[WARN] TestComplex: 跳过 (需要外部服务)")
+	c.Red("[ERR] TestDivide: 失败 - 除零错误")
+	c.Yellow("[WARN] 覆盖率: 87.5%")
+	c.Green("[OK] 测试执行完成")
 
 	println()
 
@@ -293,6 +293,5 @@ func printSection(title string) {
 	println()
 	c := color.GetGlobal()
 	c.SetConfig(&color.StyleConfig{}) // 使用默认配置
-	c.Blue("【%s】", title)
-	println()
+	c.Bluef("【%s】\n", title)
 }

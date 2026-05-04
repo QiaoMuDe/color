@@ -228,7 +228,7 @@ ORDER BY created_at DESC;`
 func printSystemDashboard() {
 	// 标题
 	PrintDoubleSeparator(color.FgHiBlue, 60)
-	color.New(color.FgHiWhite, color.Bold).Println("                    系统监控面板")
+	_, _ = color.New(color.FgHiWhite, color.Bold).Println("                    系统监控面板")
 	PrintDoubleSeparator(color.FgHiBlue, 60)
 	fmt.Println()
 

@@ -26,7 +26,7 @@ import (
 //	PrintSection("第一部分: 基础用法")
 func PrintSection(title string) {
 	fmt.Println()
-	color.New(color.FgHiWhite, color.BgBlue, color.Bold).Printf(" %s ", title)
+	_, _ = color.New(color.FgHiWhite, color.BgBlue, color.Bold).Printf(" %s ", title)
 	fmt.Println()
 	fmt.Println()
 }
@@ -38,7 +38,7 @@ func PrintSection(title string) {
 //   - title: 子章节标题文本
 func PrintSubSection(title string) {
 	fmt.Println()
-	color.New(color.FgCyan, color.Bold).Printf("▸ %s", title)
+	_, _ = color.New(color.FgCyan, color.Bold).Printf("▸ %s", title)
 	fmt.Println()
 	fmt.Println()
 }
@@ -51,7 +51,7 @@ func PrintSubSection(title string) {
 //   - length: 分隔线长度
 func PrintSeparator(c color.Attribute, length int) {
 	separator := strings.Repeat("-", length)
-	color.New(c).Println(separator)
+	_, _ = color.New(c).Println(separator)
 }
 
 // PrintDoubleSeparator 打印双分隔线
@@ -62,7 +62,7 @@ func PrintSeparator(c color.Attribute, length int) {
 //   - length: 分隔线长度
 func PrintDoubleSeparator(c color.Attribute, length int) {
 	separator := strings.Repeat("=", length)
-	color.New(c).Println(separator)
+	_, _ = color.New(c).Println(separator)
 }
 
 // ============================================================
@@ -76,7 +76,7 @@ func PrintDoubleSeparator(c color.Attribute, length int) {
 //   - format: 格式字符串
 //   - a: 格式化参数
 func LogInfo(format string, a ...interface{}) {
-	color.Cyan("[INFO]  "+format, a...)
+	color.Cyanf("[INFO]  "+format+"\n", a...)
 }
 
 // LogSuccess 打印成功级别日志
@@ -86,7 +86,7 @@ func LogInfo(format string, a ...interface{}) {
 //   - format: 格式字符串
 //   - a: 格式化参数
 func LogSuccess(format string, a ...interface{}) {
-	color.Green("[SUCCESS] "+format, a...)
+	color.Greenf("[SUCCESS] "+format+"\n", a...)
 }
 
 // LogWarn 打印警告级别日志
@@ -96,7 +96,7 @@ func LogSuccess(format string, a ...interface{}) {
 //   - format: 格式字符串
 //   - a: 格式化参数
 func LogWarn(format string, a ...interface{}) {
-	color.Yellow("[WARN]  "+format, a...)
+	color.Yellowf("[WARN]  "+format+"\n", a...)
 }
 
 // LogError 打印错误级别日志
@@ -106,7 +106,7 @@ func LogWarn(format string, a ...interface{}) {
 //   - format: 格式字符串
 //   - a: 格式化参数
 func LogError(format string, a ...interface{}) {
-	color.Red("[ERROR] "+format, a...)
+	color.Redf("[ERROR] "+format+"\n", a...)
 }
 
 // LogDebug 打印调试级别日志
@@ -116,7 +116,7 @@ func LogError(format string, a ...interface{}) {
 //   - format: 格式字符串
 //   - a: 格式化参数
 func LogDebug(format string, a ...interface{}) {
-	color.Magenta("[DEBUG] "+format, a...)
+	color.Magentaf("[DEBUG] "+format+"\n", a...)
 }
 
 // ============================================================
@@ -164,7 +164,7 @@ func (t *Table) Print() {
 	headerColor := color.New(color.FgWhite, color.BgBlue, color.Bold)
 	for i, header := range t.Headers {
 		if i < len(t.Widths) {
-			headerColor.Printf(" %-*s ", t.Widths[i], header)
+			_, _ = headerColor.Printf(" %-*s ", t.Widths[i], header)
 		}
 	}
 	fmt.Println()
@@ -175,7 +175,7 @@ func (t *Table) Print() {
 	for _, w := range t.Widths {
 		totalWidth += w + 2 // +2 for spaces
 	}
-	separatorColor.Println(strings.Repeat("─", totalWidth))
+	_, _ = separatorColor.Println(strings.Repeat("─", totalWidth))
 
 	// 打印数据行
 	for _, row := range t.Rows {
@@ -202,7 +202,7 @@ func (t *Table) Print() {
 func PrintBulletList(items []string, bulletColor color.Attribute) {
 	c := color.New(bulletColor)
 	for _, item := range items {
-		c.Print("• ")
+		_, _ = c.Print("• ")
 		fmt.Println(item)
 	}
 }
@@ -215,7 +215,7 @@ func PrintBulletList(items []string, bulletColor color.Attribute) {
 func PrintNumberedList(items []string, numberColor color.Attribute) {
 	c := color.New(numberColor)
 	for i, item := range items {
-		c.Printf("%d. ", i+1)
+		_, _ = c.Printf("%d. ", i+1)
 		fmt.Println(item)
 	}
 }
@@ -239,7 +239,7 @@ type StatusTag struct {
 //   - fg: 前景色
 //   - bg: 背景色
 func PrintStatus(text string, fg, bg color.Attribute) {
-	color.New(fg, bg, color.Bold).Printf(" %s ", text)
+	_, _ = color.New(fg, bg, color.Bold).Printf(" %s ", text)
 }
 
 // PrintStatusRunning 打印"运行中"状态标签
@@ -282,13 +282,13 @@ func PrintProgressBar(current, total, width int) {
 	empty := width - filled
 
 	// 打印进度条
-	color.New(color.FgGreen).Print("[")
-	color.New(color.FgHiGreen).Print(strings.Repeat("█", filled))
-	color.New(color.FgHiBlack).Print(strings.Repeat("░", empty))
-	color.New(color.FgGreen).Print("]")
+	_, _ = color.New(color.FgGreen).Print("[")
+	_, _ = color.New(color.FgHiGreen).Print(strings.Repeat("█", filled))
+	_, _ = color.New(color.FgHiBlack).Print(strings.Repeat("░", empty))
+	_, _ = color.New(color.FgGreen).Print("]")
 
 	// 打印百分比
-	color.New(color.FgCyan).Printf(" %.1f%%", percent*100)
+	_, _ = color.New(color.FgCyan).Printf(" %.1f%%", percent*100)
 }
 
 // PrintSpinner 打印旋转指示器（静态展示）
@@ -299,7 +299,7 @@ func PrintProgressBar(current, total, width int) {
 func PrintSpinner(frame int) {
 	frames := []string{"⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"}
 	c := color.New(color.FgCyan)
-	c.Printf("%s ", frames[frame%len(frames)])
+	_, _ = c.Printf("%s ", frames[frame%len(frames)])
 }
 
 // ============================================================
@@ -323,27 +323,27 @@ func PrintCodeBlock(code, lang string) {
 
 	// 打印顶部边框
 	fmt.Println()
-	color.New(color.FgHiBlack).Print("┌─ ")
-	color.New(color.FgYellow).Print(lang)
-	color.New(color.FgHiBlack).Print(" ")
-	color.New(color.FgHiBlack).Print(strings.Repeat("─", maxLen-len(lang)-1))
-	color.New(color.FgHiBlack).Println("┐")
+	_, _ = color.New(color.FgHiBlack).Print("┌─ ")
+	_, _ = color.New(color.FgYellow).Print(lang)
+	_, _ = color.New(color.FgHiBlack).Print(" ")
+	_, _ = color.New(color.FgHiBlack).Print(strings.Repeat("─", maxLen-len(lang)-1))
+	_, _ = color.New(color.FgHiBlack).Println("┐")
 
 	// 打印代码内容
 	for _, line := range lines {
-		color.New(color.FgHiBlack).Print("│ ")
-		color.New(color.FgWhite).Print(line)
+		_, _ = color.New(color.FgHiBlack).Print("│ ")
+		_, _ = color.New(color.FgWhite).Print(line)
 		// 填充空格对齐右边框
 		if len(line) < maxLen {
 			fmt.Print(strings.Repeat(" ", maxLen-len(line)))
 		}
-		color.New(color.FgHiBlack).Println(" │")
+		_, _ = color.New(color.FgHiBlack).Println(" │")
 	}
 
 	// 打印底部边框
-	color.New(color.FgHiBlack).Print("└")
-	color.New(color.FgHiBlack).Print(strings.Repeat("─", maxLen+2))
-	color.New(color.FgHiBlack).Println("┘")
+	_, _ = color.New(color.FgHiBlack).Print("└")
+	_, _ = color.New(color.FgHiBlack).Print(strings.Repeat("─", maxLen+2))
+	_, _ = color.New(color.FgHiBlack).Println("┘")
 	fmt.Println()
 }
 
@@ -364,35 +364,35 @@ func PrintQuote(text, author string) {
 
 	fmt.Println()
 	// 顶部边框
-	color.New(color.FgHiBlack).Print("┌")
-	color.New(color.FgHiBlack).Print(strings.Repeat("─", maxLen+2))
-	color.New(color.FgHiBlack).Println("┐")
+	_, _ = color.New(color.FgHiBlack).Print("┌")
+	_, _ = color.New(color.FgHiBlack).Print(strings.Repeat("─", maxLen+2))
+	_, _ = color.New(color.FgHiBlack).Println("┐")
 
 	// 引用内容
-	color.New(color.FgHiBlack).Print("│ ")
-	color.New(color.FgCyan).Print(text)
+	_, _ = color.New(color.FgHiBlack).Print("│ ")
+	_, _ = color.New(color.FgCyan).Print(text)
 	// 填充空格对齐右边框
 	if len(text) < maxLen {
 		fmt.Print(strings.Repeat(" ", maxLen-len(text)))
 	}
-	color.New(color.FgHiBlack).Println(" │")
+	_, _ = color.New(color.FgHiBlack).Println(" │")
 
 	// 作者
 	if author != "" {
 		authorLine := "— " + author
-		color.New(color.FgHiBlack).Print("│ ")
-		color.New(color.FgHiBlack).Print(authorLine)
+		_, _ = color.New(color.FgHiBlack).Print("│ ")
+		_, _ = color.New(color.FgHiBlack).Print(authorLine)
 		// 填充空格对齐右边框
 		if len(authorLine) < maxLen {
 			fmt.Print(strings.Repeat(" ", maxLen-len(authorLine)))
 		}
-		color.New(color.FgHiBlack).Println(" │")
+		_, _ = color.New(color.FgHiBlack).Println(" │")
 	}
 
 	// 底部边框
-	color.New(color.FgHiBlack).Print("└")
-	color.New(color.FgHiBlack).Print(strings.Repeat("─", maxLen+2))
-	color.New(color.FgHiBlack).Println("┘")
+	_, _ = color.New(color.FgHiBlack).Print("└")
+	_, _ = color.New(color.FgHiBlack).Print(strings.Repeat("─", maxLen+2))
+	_, _ = color.New(color.FgHiBlack).Println("┘")
 	fmt.Println()
 }
 
@@ -407,8 +407,8 @@ func PrintQuote(text, author string) {
 //   - message: 提示内容
 func PrintTip(title, message string) {
 	fmt.Println()
-	color.New(color.FgHiBlue, color.Bold).Printf("💡 %s: ", title)
-	color.New(color.FgWhite).Println(message)
+	_, _ = color.New(color.FgHiBlue, color.Bold).Printf("💡 %s: ", title)
+	_, _ = color.New(color.FgWhite).Println(message)
 	fmt.Println()
 }
 
@@ -418,8 +418,8 @@ func PrintTip(title, message string) {
 //   - message: 警告内容
 func PrintWarning(message string) {
 	fmt.Println()
-	color.New(color.FgHiYellow, color.Bold).Print("⚠️  警告: ")
-	color.New(color.FgYellow).Println(message)
+	_, _ = color.New(color.FgHiYellow, color.Bold).Print("⚠️  警告: ")
+	_, _ = color.New(color.FgYellow).Println(message)
 	fmt.Println()
 }
 
@@ -429,8 +429,8 @@ func PrintWarning(message string) {
 //   - message: 错误内容
 func PrintError(message string) {
 	fmt.Println()
-	color.New(color.FgHiRed, color.Bold).Print("❌ 错误: ")
-	color.New(color.FgRed).Println(message)
+	_, _ = color.New(color.FgHiRed, color.Bold).Print("❌ 错误: ")
+	_, _ = color.New(color.FgRed).Println(message)
 	fmt.Println()
 }
 
@@ -440,7 +440,7 @@ func PrintError(message string) {
 //   - message: 成功内容
 func PrintSuccess(message string) {
 	fmt.Println()
-	color.New(color.FgHiGreen, color.Bold).Print("✅ 成功: ")
-	color.New(color.FgGreen).Println(message)
+	_, _ = color.New(color.FgHiGreen, color.Bold).Print("✅ 成功: ")
+	_, _ = color.New(color.FgGreen).Println(message)
 	fmt.Println()
 }

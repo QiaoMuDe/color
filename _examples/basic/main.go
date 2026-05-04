@@ -41,10 +41,10 @@ func main() {
 	// ============================================================
 	printSection("2. 格式化输出")
 
-	// 使用 Printf 风格的格式化
-	color.Red("错误代码: %d, 消息: %s", 500, "服务器内部错误")
-	color.Green("成功处理了 %d 条记录", 42)
-	color.Yellow("警告: 磁盘使用率已达 %.1f%%", 85.5)
+	// 使用 Printf 风格的格式化（带 f 后缀的方法）
+	color.Redf("错误代码: %d, 消息: %s\n", 500, "服务器内部错误")
+	color.Greenf("成功处理了 %d 条记录\n", 42)
+	color.Yellowf("警告: 磁盘使用率已达 %.1f%%\n", 85.5)
 
 	println()
 
@@ -62,23 +62,23 @@ func main() {
 
 	// 加粗红色
 	boldRed := color.New(color.FgRed).Add(color.Bold)
-	boldRed.Println("加粗红色文本")
+	_, _ = boldRed.Println("加粗红色文本")
 
 	// 下划线绿色
 	underlineGreen := color.New(color.FgGreen, color.Underline)
-	underlineGreen.Println("下划线绿色文本")
+	_, _ = underlineGreen.Println("下划线绿色文本")
 
 	// 高亮蓝色 + 加粗 + 下划线
 	fancy := color.New(color.FgHiBlue, color.Bold, color.Underline)
-	fancy.Println("高亮蓝色加粗下划线")
+	_, _ = fancy.Println("高亮蓝色加粗下划线")
 
 	// 红色前景 + 白色背景
 	redOnWhite := color.New(color.FgRed, color.BgWhite)
-	redOnWhite.Println("红字白底")
+	_, _ = redOnWhite.Println("红字白底")
 
 	// 高亮黄色 + 黑色背景
 	yellowOnBlack := color.New(color.FgHiYellow, color.BgBlack)
-	yellowOnBlack.Println("高亮黄字黑底")
+	_, _ = yellowOnBlack.Println("高亮黄字黑底")
 
 	println()
 
@@ -88,17 +88,17 @@ func main() {
 	printSection("4. RGB 真彩色")
 
 	// RGB 前景色
-	color.RGB(255, 128, 0).Println("橙色前景 (255, 128, 0)")
-	color.RGB(255, 0, 128).Println("粉色前景 (255, 0, 128)")
-	color.RGB(0, 255, 128).Println("薄荷绿前景 (0, 255, 128)")
+	_, _ = color.RGB(255, 128, 0).Println("橙色前景 (255, 128, 0)")
+	_, _ = color.RGB(255, 0, 128).Println("粉色前景 (255, 0, 128)")
+	_, _ = color.RGB(0, 255, 128).Println("薄荷绿前景 (0, 255, 128)")
 
 	println()
 
 	// RGB 背景色
-	color.BgRGB(0, 128, 255).Println("蓝色背景 (0, 128, 255)")
+	_, _ = color.BgRGB(0, 128, 255).Println("蓝色背景 (0, 128, 255)")
 
 	// 组合 RGB 前景和背景
-	color.New().
+	_, _ = color.New().
 		AddRGB(255, 255, 255). // 白色前景
 		AddBgRGB(255, 0, 0).   // 红色背景
 		Add(color.Bold).       // 加粗
@@ -108,7 +108,7 @@ func main() {
 	println("渐变色效果:")
 	for i := 0; i < 5; i++ {
 		g := 50 + i*40
-		color.RGB(0, g, 255).Printf("█")
+		_, _ = color.RGB(0, g, 255).Printf("█")
 	}
 	println()
 
@@ -120,14 +120,14 @@ func main() {
 	printSection("5. 输出到不同目标")
 
 	// 输出到标准错误
-	color.New(color.FgRed).Fprintln(os.Stderr, "这是一条错误信息（输出到 stderr）")
+	_, _ = color.New(color.FgRed).Fprintln(os.Stderr, "这是一条错误信息（输出到 stderr）")
 
 	// 输出到文件
 	file, err := os.CreateTemp("", "color-example-*.txt")
 	if err == nil {
-		defer file.Close()
-		color.New(color.FgGreen).Fprintln(file, "这是写入文件的内容")
-		color.Cyan("内容已写入文件: %s", file.Name())
+		defer func() { _ = file.Close() }()
+		_, _ = color.New(color.FgGreen).Fprintln(file, "这是写入文件的内容")
+		color.Cyanf("内容已写入文件: %s\n", file.Name())
 	}
 
 	println()
@@ -166,15 +166,15 @@ func main() {
 	c := color.New(color.FgYellow)
 
 	// 正常输出
-	c.Println("正常颜色输出")
+	_, _ = c.Println("正常颜色输出")
 
 	// 禁用颜色
 	c.DisableColor()
-	c.Println("颜色已禁用（纯文本）")
+	_, _ = c.Println("颜色已禁用（纯文本）")
 
 	// 重新启用颜色
 	c.EnableColor()
-	c.Println("颜色已重新启用")
+	_, _ = c.Println("颜色已重新启用")
 
 	println()
 
@@ -207,7 +207,7 @@ func main() {
 // printSection 打印章节标题
 func printSection(title string) {
 	println()
-	color.New(color.FgHiWhite, color.BgBlue, color.Bold).Printf(" %s ", title)
+	_, _ = color.New(color.FgHiWhite, color.BgBlue, color.Bold).Printf(" %s ", title)
 	println()
 	println()
 }
@@ -216,15 +216,15 @@ func printSection(title string) {
 func printLog(level, message string) {
 	switch level {
 	case "INFO":
-		color.Cyan("[INFO]  %s", message)
+		color.Cyanf("[INFO]  %s\n", message)
 	case "WARN":
-		color.Yellow("[WARN]  %s", message)
+		color.Yellowf("[WARN]  %s\n", message)
 	case "ERROR":
-		color.Red("[ERROR] %s", message)
+		color.Redf("[ERROR] %s\n", message)
 	case "DEBUG":
-		color.Magenta("[DEBUG] %s", message)
+		color.Magentaf("[DEBUG] %s\n", message)
 	case "SUCCESS":
-		color.Green("[OK]    %s", message)
+		color.Greenf("[OK]    %s\n", message)
 	default:
 		println("["+level+"]", message)
 	}
@@ -234,9 +234,9 @@ func printLog(level, message string) {
 func printTable() {
 	// 表头
 	header := color.New(color.FgWhite, color.BgBlue, color.Bold)
-	header.Printf(" %-10s ", "名称")
-	header.Printf(" %-8s ", "状态")
-	header.Printf(" %-15s ", "时间")
+	_, _ = header.Printf(" %-10s ", "名称")
+	_, _ = header.Printf(" %-8s ", "状态")
+	_, _ = header.Printf(" %-15s ", "时间")
 	println()
 
 	// 数据行
@@ -247,12 +247,11 @@ func printTable() {
 
 // printRow 打印表格行
 func printRow(name, status, timeStr string, running bool) {
-	color.White(" %-10s ", name)
+	color.Whitef(" %-10s ", name)
 	if running {
-		color.Green(" %-8s ", status)
+		color.Greenf(" %-8s ", status)
 	} else {
-		color.Red(" %-8s ", status)
+		color.Redf(" %-8s ", status)
 	}
-	color.Cyan(" %-15s ", timeStr)
-	println()
+	color.Cyanf(" %-15s \n", timeStr)
 }

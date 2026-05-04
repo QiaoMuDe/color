@@ -11,6 +11,10 @@ _examples/
 │   └── main.go
 ├── global/            # 全局实例用法示例
 │   └── main.go
+├── newapi/            # 新版 API 示例（v4.0）
+│   └── main.go
+├── rgb/               # RGB 真彩色示例
+│   └── main.go
 ├── utils/             # 终端 UI 辅助函数示例
 │   ├── utils.go       # 辅助函数定义
 │   └── main.go        # 演示调用
@@ -36,6 +40,32 @@ go run main.go
 ```bash
 cd global
 go run main.go
+```
+
+### 新版 API 示例（v4.0）
+
+演示 color 包 v4.0 版本的新 API：
+- 便捷函数的四件套：`Red()`, `Redf()`, `SRed()`, `SRedf()`
+- 全局实例方法的四件套：`c.Red()`, `c.Redf()`, `c.SRed()`, `c.SRedf()`
+- API 变化说明：带 `f` 后缀支持格式化，带 `S` 前缀返回字符串
+
+```bash
+cd newapi
+go run .
+```
+
+### RGB 真彩色示例
+
+演示 RGB 真彩色功能的使用：
+- RGB 前景色：`RGB(r, g, b)`
+- RGB 背景色：`BgRGB(r, g, b)`
+- 链式调用：`AddRGB()`, `AddBgRGB()`
+- 渐变色效果和彩虹色输出
+- 实际应用场景（温度显示、CPU 使用率、彩色进度条、彩色表格）
+
+```bash
+cd rgb
+go run .
 ```
 
 ### 终端 UI 辅助函数示例
@@ -65,14 +95,39 @@ go run .
 ### global/main.go
 
 - 基本使用（默认白色加粗）
-- 颜色快捷方法（GRed/GGreen 等）
+- 颜色快捷方法（Red/Green 等）
 - 高亮颜色快捷方法
-- 日志级别快捷方法（GInfo/GSuccess/GWarn/GError/GDebug）
 - 样式组合
 - 动态添加样式
 - 禁用/启用颜色
-- 获取全局实例进行高级操作
+- 输出方向控制（stdout/stderr）
 - 实际应用场景（命令行工具输出）
+
+### newapi/main.go
+
+- 便捷函数四件套：`Red()`, `Redf()`, `SRed()`, `SRedf()`
+- 全局实例四件套：`c.Red()`, `c.Redf()`, `c.SRed()`, `c.SRedf()`
+- 基础颜色：Red, Green, Blue, Yellow, Cyan, Magenta, White, Gray
+- 高亮颜色：HiRed, HiGreen, HiBlue 等
+- 全局实例样式配置（加粗、下划线等）
+- 全局实例输出方向控制
+- 实际应用场景（日志级别、状态标签、表格输出）
+
+### rgb/main.go
+
+- RGB 前景色基础：`RGB(255, 0, 0).Println()`
+- RGB 背景色：`BgRGB(255, 0, 0).Println()`
+- 前景色 + 背景色组合：`AddRGB() + AddBgRGB()`
+- RGB + 样式属性组合：`AddRGB() + Add(Bold)`
+- 渐变色效果（红到黄、蓝到青、紫到粉、灰度）
+- 彩虹色输出
+- 返回字符串：`RGB().Sprint()`
+- 实际应用场景：
+  - 温度显示（根据温度动态着色）
+  - CPU 使用率（彩色进度条）
+  - RGB 彩色进度条（绿到红渐变）
+  - RGB 彩色表格（服务状态监控）
+- RGB 颜色选择器展示
 
 ### utils/main.go & utils.go
 
