@@ -10,24 +10,6 @@
 
 </div>
 
-[📦 项目仓库](https://gitee.com/MM-Q/color.git) | [📄 中文文档](doc.go) | [🔧 示例代码](color_test.go)
-
----
-
-## 📋 目录
-
-- [项目简介](#-项目简介)
-- [核心特性](#-核心特性)
-- [安装指南](#-安装指南)
-- [使用示例](#-使用示例)
-- [API文档](#-api文档)
-- [支持功能](#-支持功能)
-- [配置选项](#-配置选项)
-- [项目结构](#-项目结构)
-- [测试说明](#-测试说明)
-- [许可证](#-许可证)
-- [联系方式](#-联系方式)
-
 ---
 
 ## 🎯 项目简介
@@ -276,8 +258,10 @@ func main() {
 | `SRed()` | 返回红色字符串 | `s := color.SRed("text")` |
 | `HiRed()` | 高亮红色打印 | `color.HiRed("text")` |
 | `SHiRed()` | 返回高亮红色字符串 | `s := color.SHiRed("text")` |
+| `Gray()` | 灰色打印 | `color.Gray("text")` |
+| `SGray()` | 返回灰色字符串 | `s := color.SGray("text")` |
 
-> 完整列表：`Black/Red/Green/Yellow/Blue/Magenta/Cyan/White` 和对应的高亮版本 `HiBlack/HiRed/...`
+> 完整列表：`Black/Red/Green/Yellow/Blue/Magenta/Cyan/White` 和对应的高亮版本 `HiBlack/HiRed/...`，以及灰色 `Gray/SGray`
 
 ### Color 对象方法
 
@@ -329,6 +313,9 @@ color.FgBlue, color.FgMagenta, color.FgCyan, color.FgWhite
 color.FgHiBlack, color.FgHiRed, color.FgHiGreen, color.FgHiYellow
 color.FgHiBlue, color.FgHiMagenta, color.FgHiCyan, color.FgHiWhite
 
+// 灰色（高亮黑色的别名）
+color.FgGray  // 灰色前景
+
 // 标准背景色（40-47）
 color.BgBlack, color.BgRed, color.BgGreen, color.BgYellow
 color.BgBlue, color.BgMagenta, color.BgCyan, color.BgWhite
@@ -336,6 +323,9 @@ color.BgBlue, color.BgMagenta, color.BgCyan, color.BgWhite
 // 高亮背景色（100-107）
 color.BgHiBlack, color.BgHiRed, color.BgHiGreen, color.BgHiYellow
 color.BgHiBlue, color.BgHiMagenta, color.BgHiCyan, color.BgHiWhite
+
+// 灰色背景（高亮黑色背景的别名）
+color.BgGray  // 灰色背景
 ```
 
 ---

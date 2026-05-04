@@ -521,6 +521,37 @@ SHiWhite 返回带有高亮白色前景的字符串。
 
 ---
 
+### Gray
+
+```go
+func Gray(format string, a ...interface{})
+```
+
+Gray 以灰色前景打印文本。灰色是高亮黑色的别名，在终端中显示为灰色。默认会在 format 末尾追加换行符。
+
+**参数:**
+- `format`: 格式字符串
+- `a`: 格式化参数
+
+---
+
+### SGray
+
+```go
+func SGray(format string, a ...interface{}) string
+```
+
+SGray 返回带有灰色前景的字符串。灰色是高亮黑色的别名，在终端中显示为灰色。
+
+**参数:**
+- `format`: 格式字符串
+- `a`: 格式化参数
+
+**返回值:**
+- `string`: 带有灰色前景的字符串
+
+---
+
 ### HiYellow
 
 ```go
@@ -746,6 +777,7 @@ const (
     FgMagenta                       // 洋红色/品红色前景
     FgCyan                          // 青色前景
     FgWhite                         // 白色前景
+    FgGray = FgHiBlack              // 灰色前景（FgHiBlack 的别名）
 )
 ```
 
@@ -780,6 +812,7 @@ const (
     BgMagenta                       // 洋红色/品红色背景
     BgCyan                          // 青色背景
     BgWhite                         // 白色背景
+    BgGray = BgHiBlack              // 灰色背景（BgHiBlack 的别名）
 )
 ```
 
@@ -1593,6 +1626,20 @@ Black 使用黑色样式打印文本。默认会在 format 末尾追加换行符
 
 ---
 
+#### Gray
+
+```go
+func (g *GlobalColor) Gray(format string, a ...interface{})
+```
+
+Gray 使用灰色样式打印文本。灰色是高亮黑色的别名，在终端中显示为灰色。默认会在 format 末尾追加换行符。
+
+**参数:**
+- `format`: 格式字符串
+- `a`: 格式化参数
+
+---
+
 #### Red
 
 ```go
@@ -2040,6 +2087,37 @@ func (g *GlobalColor) SHiWhite(format string, a ...interface{}) string
 ```
 
 SHiWhite 返回高亮白色样式的字符串（不打印）。
+
+**参数:**
+- `format`: 格式字符串
+- `a`: 格式化参数
+
+**返回值:**
+- `string`: 格式化后的字符串
+
+---
+
+#### Gray
+
+```go
+func (g *GlobalColor) Gray(format string, a ...interface{})
+```
+
+Gray 使用灰色样式打印。灰色是高亮黑色的别名，在终端中显示为灰色。
+
+**参数:**
+- `format`: 格式字符串
+- `a`: 格式化参数
+
+---
+
+#### SGray
+
+```go
+func (g *GlobalColor) SGray(format string, a ...interface{}) string
+```
+
+SGray 返回灰色样式的字符串（不打印）。灰色是高亮黑色的别名，在终端中显示为灰色。
 
 **参数:**
 - `format`: 格式字符串

@@ -354,6 +354,12 @@ func (g *GlobalColor) Black(format string, a ...interface{}) {
 	g.setColor(FgBlack, format, a...)
 }
 
+// Gray 使用灰色样式打印
+// 灰色是高亮黑色的别名，在终端中显示为灰色
+func (g *GlobalColor) Gray(format string, a ...interface{}) {
+	g.setColor(FgHiBlack, format, a...)
+}
+
 // ===========================================================
 // 返回字符串的颜色方法（不换行）
 // ===========================================================
@@ -396,6 +402,12 @@ func (g *GlobalColor) SWhite(format string, a ...interface{}) string {
 // SBlack 返回黑色样式的字符串
 func (g *GlobalColor) SBlack(format string, a ...interface{}) string {
 	return g.sprintColor(FgBlack, format, a...)
+}
+
+// SGray 返回灰色样式的字符串
+// 灰色是高亮黑色的别名，在终端中显示为灰色
+func (g *GlobalColor) SGray(format string, a ...interface{}) string {
+	return g.sprintColor(FgHiBlack, format, a...)
 }
 
 // ===========================================================

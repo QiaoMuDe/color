@@ -61,6 +61,10 @@ const (
 	FgCyan                          // 青色前景
 	FgWhite                         // 白色前景
 
+	// FgGray 是 FgHiBlack 的别名，在终端中显示为灰色。
+	// 提供这个别名是为了让代码更具可读性。
+	FgGray = FgHiBlack
+
 	// foreground 是内部常量，用于 256 色和 24 位真彩色模式。
 	// 不应在代码中直接使用。
 	foreground
@@ -90,6 +94,10 @@ const (
 	BgMagenta                       // 洋红色/品红色背景
 	BgCyan                          // 青色背景
 	BgWhite                         // 白色背景
+
+	// BgGray 是 BgHiBlack 的别名，在终端中显示为灰色背景。
+	// 提供这个别名是为了让代码更具可读性。
+	BgGray = BgHiBlack
 
 	// background 是内部常量，用于 256 色和 24 位真彩色模式。
 	// 不应在代码中直接使用。

@@ -64,6 +64,15 @@ func Cyan(format string, a ...interface{}) { colorPrint(format, FgCyan, a...) }
 //   - a: 格式化参数
 func White(format string, a ...interface{}) { colorPrint(format, FgWhite, a...) }
 
+// Gray 以灰色前景打印文本。
+// 灰色是高亮黑色的别名，在终端中显示为灰色。
+// 默认会在 format 末尾追加换行符。
+//
+// 参数:
+//   - format: 格式字符串
+//   - a: 格式化参数
+func Gray(format string, a ...interface{}) { colorPrint(format, FgHiBlack, a...) }
+
 // SBlack 返回带有黑色前景的字符串。
 //
 // 参数:
@@ -145,6 +154,17 @@ func SCyan(format string, a ...interface{}) string { return colorString(format, 
 // 返回值:
 //   - string: 带有白色前景的字符串
 func SWhite(format string, a ...interface{}) string { return colorString(format, FgWhite, a...) }
+
+// SGray 返回带有灰色前景的字符串。
+// 灰色是高亮黑色的别名，在终端中显示为灰色。
+//
+// 参数:
+//   - format: 格式字符串
+//   - a: 格式化参数
+//
+// 返回值:
+//   - string: 带有灰色前景的字符串
+func SGray(format string, a ...interface{}) string { return colorString(format, FgHiBlack, a...) }
 
 // HiBlack 以高亮黑色前景打印文本。
 // 默认会在 format 末尾追加换行符。
