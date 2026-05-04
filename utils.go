@@ -54,9 +54,8 @@ func getCachedColor(p Attribute) *Color {
 func colorPrint(format string, p Attribute, a ...interface{}) {
 	c := getCachedColor(p)
 
-	if !strings.HasSuffix(format, "\n") {
-		format += "\n"
-	}
+	// 确保格式字符串以换行符结尾
+	format = ensureNewline(format)
 
 	if len(a) == 0 {
 		_, _ = c.Print(format)
@@ -82,6 +81,21 @@ func colorString(format string, p Attribute, a ...interface{}) string {
 	}
 
 	return c.SprintfFunc()(format, a...)
+}
+
+// ensureNewline 确保字符串以换行符结尾。
+// 如果字符串不以 "\n" 结尾，则自动追加一个换行符。
+//
+// 参数:
+//   - s: 原始字符串
+//
+// 返回值:
+//   - string: 确保以换行符结尾的字符串
+func ensureNewline(s string) string {
+	if !strings.HasSuffix(s, "\n") {
+		return s + "\n"
+	}
+	return s
 }
 
 // sprintln 是一个辅助函数，用于使用 fmt.Sprintln 格式化字符串并去除末尾的换行符。

@@ -271,17 +271,21 @@ func (g *GlobalColor) output() io.Writer {
 }
 
 // printf 内部格式化输出方法
+// 如果 format 不以换行符结尾，会自动追加换行符
 func (g *GlobalColor) printf(format string, a ...interface{}) {
+	// 确保格式字符串以换行符结尾
+	format = ensureNewline(format)
+
 	g.mu.RLock()
 	c := g.color
 	noColor := g.config.NoColor
 	g.mu.RUnlock()
 
 	if c == nil || noColor {
-		_, _ = fmt.Fprintf(g.output(), format+"\n", a...)
+		_, _ = fmt.Fprintf(g.output(), format, a...)
 		return
 	}
-	_, _ = fmt.Fprint(g.output(), c.Sprintf(format+"\n", a...))
+	_, _ = fmt.Fprint(g.output(), c.Sprintf(format, a...))
 }
 
 // setColor 设置颜色并打印
