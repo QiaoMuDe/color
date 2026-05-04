@@ -11,6 +11,8 @@ _examples/
 │   └── main.go
 ├── global/            # 全局实例用法示例
 │   └── main.go
+├── markdown/          # Markdown 语法终端渲染示例
+│   └── main.go
 ├── newapi/            # 新版 API 示例（v4.0）
 │   └── main.go
 ├── rgb/               # RGB 真彩色示例
@@ -51,6 +53,23 @@ go run main.go
 
 ```bash
 cd newapi
+go run .
+```
+
+### Markdown 语法终端渲染示例
+
+演示如何在终端中渲染 Markdown 语法的 UI 组件：
+- 标题渲染（H1-H6，带颜色和装饰线）
+- 强调文本（粗体、斜体、删除线、行内代码）
+- 列表渲染（无序列表、有序列表、任务列表）
+- 代码块渲染（带语法高亮和语言标签）
+- 引用块渲染（带作者信息）
+- 表格渲染（Markdown 风格、带状态颜色）
+- 链接和分隔线
+- 综合示例（完整 Markdown 文档渲染）
+
+```bash
+cd markdown
 go run .
 ```
 
@@ -112,6 +131,17 @@ go run .
 - 全局实例样式配置（加粗、下划线等）
 - 全局实例输出方向控制
 - 实际应用场景（日志级别、状态标签、表格输出）
+
+### markdown/main.go
+
+- 标题渲染：`renderH1()` - `renderH6()`，带颜色和装饰线
+- 强调文本：`renderBold()`, `renderItalic()`, `renderBoldItalic()`, `renderStrikethrough()`, `renderInlineCode()`
+- 列表渲染：`renderUnorderedList()`, `renderOrderedList()`, `renderTaskList()`
+- 代码块渲染：`renderCodeBlock()`，带语法高亮（Go/JSON/Bash）
+- 引用块渲染：`renderBlockquote()`，带作者信息
+- 表格渲染：`renderMarkdownTable()`, `renderStatusTable()`
+- 链接和分隔线：`renderLink()`, `renderHorizontalRule()`
+- 综合示例：`renderMarkdownDocument()` - 完整 Markdown 文档渲染
 
 ### rgb/main.go
 
