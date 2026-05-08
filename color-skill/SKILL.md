@@ -1,23 +1,6 @@
 ---
-name: go-color-assistant
-description: |
-  为 Go 语言的 color 库（gitee.com/MM-Q/color）生成彩色输出代码。
-  
-  当用户需要以下帮助时触发此 skill：
-  - 给终端输出添加颜色（如"给这段文字加上颜色"、"让输出更醒目"）
-  - 使用 color 库美化输出（如"用 color 库高亮显示错误信息"）
-  - 生成彩色日志、表格、进度条等终端 UI 组件
-  - 询问 color 库的 API 用法（如"怎么打印红色文字"、"如何组合样式"）
-  - 调试颜色相关问题（如"颜色为什么不显示"、"怎么禁用颜色"）
-  
-  即使只是提到"颜色"、"color"、"美化输出"、"高亮"等关键词，也应该使用此 skill 提供专业的 color 库解决方案。
-  
-  此 skill 专门处理 gitee.com/MM-Q/color 库，支持：
-  - 便捷函数（Red/Green/Blue 等）
-  - 链式调用（New().Add().Print()）
-  - RGB 真彩色
-  - 全局实例（G()）
-  - 字符串返回方法（SRed/SGreen 等）
+name: go-color
+description: 为 Go 语言的 color 库（gitee.com/MM-Q/color）生成彩色输出代码。当用户需要给终端输出添加颜色、使用 color 库美化输出、生成彩色日志/表格/进度条等终端 UI 组件、询问 color 库的 API 用法或调试颜色相关问题时触发此 skill。支持便捷函数、链式调用、RGB 真彩色、全局实例、字符串返回方法等功能。
 ---
 
 # Go Color 库助手
